@@ -1,0 +1,149 @@
+import discord
+from discord.ext import commands
+
+
+# class RolesGiver(commands.Cog):
+    # def __init__(self, bot):
+        # self.bot = bot
+
+    # @commands.Cog.listener()
+    # async def on_ready(self):
+        # self.channel = self.bot.get_channel(827470485604401192)
+
+        # self.roles = {
+            # '📦': 838681138770870292
+        # }
+        # for key in self.roles:
+            # self.roles[key] = self.channel.guild.get_role(self.roles[key])
+
+        # self.message = await self.channel.fetch_message(838696931005825024)
+    
+    # @commands.Cog.listener()
+    # async def on_raw_reaction_add(self, payload):
+        # if str(payload.emoji) in self.roles:
+            # try: await payload.member.add_roles(self.roles[str(payload.emoji)])
+            # except: pass
+    
+    # @commands.Cog.listener()
+    # async def on_raw_reaction_remove(self, payload):
+        # if str(payload.emoji) in self.roles:
+            # try: await payload.member.remove_roles(self.roles[str(payload.emoji)])
+            # except: pass
+    
+    # @commands.command()
+    # async def roles_resend(self, ctx):
+        # await self.message.edit(
+            # embed=discord.Embed(
+                # title='Специальные роли'
+            # ).add_field(
+                # name='📦',
+                # value='Дает доступ к категории майнкрафт сервера'
+            # )
+        # )
+        # for key in self.roles:
+            # await self.message.add_reaction(key)
+        # await ctx.add_reaction('✅')
+
+class ColorChanger(commands.Cog):
+    def __init__(self, bot: commands.Bot):
+        self.bot = bot
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        channel = self.bot.get_channel(827470485604401192)
+
+        self.roles = {
+            '🦑': 833053374600577026,
+            '👛': 833053402405142538,
+            '🏮': 833053432234901505,
+            '👌🏻': 833235083355095082,
+            '🌆': 833053576745451613,
+            '📒': 833053452405571604,
+            '🍌': 833053536245383238,
+            '🍃': 833053525432860692,
+            '🐢': 833053547142709319,
+            '📗': 833053557347450901,
+            '🧪': 833232827134246952,
+            '🩲': 833231105385562142,
+            '🌊': 833053748380827649,
+            '🧿': 833053502833950730,
+            '🔮': 833053757498982500,
+            '🍆': 833238131964379166,
+            '🌺': 833053319218855966,
+            '🦔': 833065024091848724,
+            '💿': 833053569304494136,
+            '♟️': 833053487033090058,
+        }
+
+        for key in self.roles:
+            self.roles[key] = channel.guild.get_role(self.roles[key])
+
+        self.message = await channel.fetch_message(833406896072949790)
+    
+    @commands.Cog.listener()
+    async def on_raw_reaction_add(self, payload):
+        channel = self.bot.get_channel(payload.channel_id)
+        message = await channel.fetch_message(payload.message_id)
+        if not message == self.message:
+            return
+        if not payload.emoji.name in self.roles:
+            return
+        if payload.member.id == self.bot.user.id:
+            return
+        
+        user_roles = list(filter(lambda x: x.name in self.roles, payload.member.roles))
+        if len(user_roles) > 0:
+            for role in user_roles:
+                reaction = discord.utils.get(message.reactions, emoji=role.name)
+                await reaction.remove(payload.member)
+        
+
+        new_role = self.roles[payload.emoji.name]
+        await payload.member.add_roles(new_role)
+    
+    @commands.Cog.listener()
+    async def on_raw_reaction_remove(self, payload):
+        channel = self.bot.get_channel(payload.channel_id)
+        message = await channel.fetch_message(payload.message_id)
+        member = channel.guild.get_member(payload.user_id)
+
+        if not message == self.message:
+            return
+        if not payload.emoji.name in self.roles:
+            return
+        
+        role = self.roles[payload.emoji.name]
+        if role in member.roles:
+            await member.remove_roles(role)
+        
+    @commands.command(name='color_resend')
+    @commands.is_owner()
+    async def embed_resend(self, ctx):
+        text = '<@&833053374600577026> — Кальмар' \
+               '\n<@&833053402405142538> — Коралловый' \
+               '\n<@&833053432234901505> — Красный фонарь' \
+               '\n<@&833235083355095082> — Бежевый' \
+               '\n<@&833053576745451613> — Закат' \
+               '\n<@&833053452405571604> — Золотой' \
+               '\n<@&833053536245383238> — Я – банан' \
+               '\n<@&833053525432860692> — No Drugs For Today' \
+               '\n<@&833053547142709319> — Черепаха Наталия' \
+               '\n<@&833053557347450901> — Изумрудный' \
+               '\n<@&833232827134246952> — Прививка от короны' \
+               '\n<@&833231105385562142> — Пантсу' \
+               '\n<@&833053748380827649> — Морская волна' \
+               '\n<@&833053502833950730> — Синий глаз' \
+               '\n<@&833053757498982500> — Я знаю, что вы делали этим летом' \
+               '\n<@&833238131964379166> — Баклажан' \
+               '\n<@&833053319218855966> — Гибискус' \
+               '\n<@&833065024091848724> — Подпарашный ёжик' \
+               '\n<@&833053569304494136> — Легендарная пыль' \
+               '\n<@&833053487033090058> — Тень'
+        msg = await ctx.send(embed=discord.Embed(description=text))
+        for emoji in self.roles:
+            await msg.add_reaction(emoji)
+
+
+def setup(bot):
+    if not 'ColorChanger' in bot.cogs:
+        bot.add_cog(ColorChanger(bot))

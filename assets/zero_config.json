@@ -1,0 +1,17 @@
+{
+    "prefix": "!",
+    "voice_private": {
+        "category_id": 0,
+        "basechannel_id": 0
+    },
+    "xp": {
+        "limits": {
+            "min": 0,
+            "max": 0
+        },
+        "modifer": 0
+    },
+    "special_badges": {
+        "0": [0]
+    }
+}
