@@ -51,7 +51,7 @@ class TicTacToeButton(discord.ui.Button['TicTacToe']):
 
         await interaction.response.edit_message(content=content, view=view)
 
-class TicTacToe(discord.ui.View):
+class TTTView(discord.ui.View):
     X = -1
     O = 1
     Tie = 2
@@ -141,7 +141,7 @@ class TicTacToe(commands.Cog):
             m = await ctx.send(f'{member.mention}, `{ctx.author.display_name}` хочет сыграть в крестики-нолики')
             result = await Confirm(m, [member.id], timeout=30).reconst(ctx)
         if result:
-            view = TicTacToe(ctx.author, member)
+            view = TTTView(ctx.author, member)
             game_msg = await ctx.send(f'Крестики-нолики: X ({ctx.author.mention}) ходит', view=view)
             itr_result = await view.wait()
             if itr_result:
