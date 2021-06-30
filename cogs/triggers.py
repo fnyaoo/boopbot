@@ -42,9 +42,9 @@ class Triggers(commands.Cog):
             avatar = await message.author.avatar.read(),
             reason = reason
         )
-        await message.delete(reason = reason)
+        await message.delete()
         await wh.send(content)
-        await wh.delete(reason = reason)
+        await wh.delete()
     
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
