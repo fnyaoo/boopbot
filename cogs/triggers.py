@@ -2,21 +2,31 @@ import re
 
 import discord
 from discord.ext import commands
+from discord.utils import find
 
 from utils import layout
 
 
 class Triggers(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
-        self.regex = re.compile('<(?P<animated>a?):(?P<name>[a-zA-Z0-9_]{2,32}):(?P<id>[0-9]{18,22})>')
+        self.regex = re.compile(r';(?P<name>[a-zA-Z0-9_]{2,32});')
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
+        if message.guild is None:
+            return
+        if message.author.bot:
+            return
+
         content = message.content
         
         if not message.author.premium_since:
             if re.match(self.regex, content):
+                for match in re.finditer(self.regex, content):
+                    emoji = find(lambda x: x.name == match.group('name'), self.bot.emojis)
+                    content.replace(f';{match.group("name")};', str(emoji))
+
                 return await self.send_webhook(message, content, 'Анимированный бейдж')
 
         if 'TADA' in content:
