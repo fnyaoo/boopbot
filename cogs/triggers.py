@@ -10,7 +10,8 @@ from utils import layout
 class Triggers(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-        self.regex = re.compile(r';(?P<name>[a-zA-Z0-9_]{2,32});')
+        self.regex = re.compile(r"<;(?P<name>[a-zA-Z0-9_]{2,32});>", flags = re.DOTALL)
+        print(self.regex)
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
@@ -21,15 +22,14 @@ class Triggers(commands.Cog):
 
         content = message.content
         
-        if re.match(self.regex, content):
-
+        if len(re.findall(self.regex, content)) > 0:
             def subfunc(matchobj: re.Match):
+                print(f"Match was found at {matchobj.start()}-{matchobj.end()}: {matchobj.group('name')}")
                 emoji = find(lambda x: x.name == matchobj.group('name'), self.bot.emojis)
-                return str(emoji)
+                if not emoji is None: return str(emoji)
+                else: return matchobj.group('name')
 
             content = re.sub(self.regex, subfunc, content)
-
-            # return await message.channel.send(content)
             return await self.send_webhooked(message, content, 'Анимированный эмоджи')
 
         if 'TADA' in content:
