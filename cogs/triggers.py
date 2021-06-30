@@ -21,13 +21,12 @@ class Triggers(commands.Cog):
 
         content = message.content
         
-        if not message.author.premium_since:
-            if re.match(self.regex, content):
-                for match in re.finditer(self.regex, content):
-                    emoji = find(lambda x: x.name == match.group('name'), self.bot.emojis)
-                    content.replace(f';{match.group("name")};', str(emoji))
+        if re.match(self.regex, content):
+            for match in re.finditer(self.regex, content):
+                emoji = find(lambda x: x.name == match.group('name'), self.bot.emojis)
+                content.replace(f';{match.group("name")};', str(emoji))
 
-                return await self.send_webhook(message, content, 'Анимированный бейдж')
+            return await self.send_webhook(message, content, 'Анимированный бейдж')
 
         if 'TADA' in content:
             await message.add_reaction('🎉')
