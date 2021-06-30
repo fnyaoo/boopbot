@@ -22,11 +22,15 @@ class Triggers(commands.Cog):
         content = message.content
         
         if re.match(self.regex, content):
-            for match in re.finditer(self.regex, content):
-                emoji = find(lambda x: x.name == match.group('name'), self.bot.emojis)
-                content.replace(f';{match.group("name")};', str(emoji))
 
-            return await self.send_webhook(message, content, 'Анимированный бейдж')
+            def subfunc(matchobj: re.Match):
+                emoji = find(lambda x: x.name == matchobj.group('name'), self.bot.emojis)
+                return str(emoji)
+
+            content = re.sub(self.regex, subfunc, content)
+
+            # return await message.channel.send(content)
+            return await self.send_webhooked(message, content, 'Анимированный эмоджи')
 
         if 'TADA' in content:
             await message.add_reaction('🎉')
@@ -36,7 +40,7 @@ class Triggers(commands.Cog):
         if '<3' in content:
             await message.add_reaction('♥')
     
-    async def send_webhook(self, message, content, reason=None):
+    async def send_webhooked(self, message, content, reason=None):
         wh = await message.channel.create_webhook(
             name = message.author.display_name, 
             avatar = await message.author.avatar.read(),
@@ -54,7 +58,7 @@ class Triggers(commands.Cog):
         if msg.author != user:
             return
 
-        await self.send_webhook(msg, f'{msg.content.translate(layout)}\n> **Исправлена раскладка клавиатуры**', 'Исправление раскладки')
+        await self.send_webhooked(msg, f'{msg.content.translate(layout)}\n> **Исправлена раскладка клавиатуры**', 'Исправление раскладки')
 
 
 def setup(bot):

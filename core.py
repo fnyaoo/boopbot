@@ -19,7 +19,7 @@ bot = commands.Bot(
 
 bot.load_extension('events')
 bot.load_extension('cogs')
-bot.load_extension('games')
+# bot.load_extension('games')
 bot.load_extension('jishaku')
 
 
