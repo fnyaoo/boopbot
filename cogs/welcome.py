@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-from utils import GateMenu
+from utils.menus import GateMenu
 
 
 class Welcomer(commands.Cog):

@@ -1,6 +1,6 @@
 from asyncio import TimeoutError
 from discord import ButtonStyle
-from utils import Confirm, ResponseType
+from utils.menus import Confirm, ResponseType
 import discord
 from discord.ext import commands
 

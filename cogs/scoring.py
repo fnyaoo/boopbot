@@ -5,11 +5,10 @@ import asyncio
 import discord
 from discord.ext import commands
 
-from utils import (
-    MembersDB as modaler, Scoring, 
-    inflect_by_amount, levels, levels_inverted, get_level, BarCreator, config, 
-    ScoringPages
-)
+from utils.database import MembersDB as modaler, Scoring
+from utils import inflect_by_amount, levels, levels_inverted, get_level, BarCreator, config
+from utils.menus import ScoringPages
+
 
 
 class ScoringSystem(commands.Cog):
