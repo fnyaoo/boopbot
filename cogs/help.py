@@ -8,6 +8,7 @@ class MyHelpCommand(commands.HelpCommand):
         self.splash = f'https://images-ext-2.discordapp.net/external/Nzf7XfPBxPFWzsf6QKm7EASPu8cUkI-JG0Uxy9Kk_Kw/%3Fsize%3D1024/https/cdn.discordapp.com/splashes/824997091075555419/877b556e3f34f2e63800ba246eb48103.png'
     
     async def send_bot_help(self, mapping):
+        mapping.pop(None)
         dest: discord.abc.Messageable = self.get_destination()
 
         filtered_commands = await self.filter_commands(flat_list = [item for sublist in mapping.values() for item in sublist])
@@ -33,7 +34,7 @@ class MyHelpCommand(commands.HelpCommand):
             value = '\n'.join([f"**{cog._qualified_name}**" for cog in cog_list])
         )
         await dest.send(embed=embed)
-        
+
 class Help(commands.Cog):
     def __init__(self, bot):
         self._original_help_command = bot.help_command
