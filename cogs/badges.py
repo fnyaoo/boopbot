@@ -3,7 +3,7 @@ from discord.ext import commands
 
 from errors import BadgeBadArgument
 from checks import is_admin
-from utils import config, 
+from utils import config
 from utils.database import BadgesManage, MembersDB, Badge_Products
 
 
