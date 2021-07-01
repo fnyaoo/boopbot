@@ -11,7 +11,7 @@ class MyHelpCommand(commands.HelpCommand):
         mapping.pop(None)
         dest: discord.abc.Messageable = self.get_destination()
 
-        filtered_commands = await self.filter_commands(flat_list = [item for sublist in mapping.values() for item in sublist])
+        filtered_commands = await self.filter_commands([item for sublist in mapping.values() for item in sublist])
         cog_list = list(filter(
             lambda k: (
                 mapping[k] != [] and 
@@ -48,5 +48,5 @@ class Help(commands.Cog):
         self.bot.help_command = self._original_help_command
 
 
-def setup(bot):
-    bot.add_cog(Help(bot))
+def setup(bot): pass
+    # bot.add_cog(Help(bot))
