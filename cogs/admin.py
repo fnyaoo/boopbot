@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 
 from checks import is_admin
-from utils import MembersDB as modaler
+from utils.database import MembersDB as modaler
 
 
 class AdminCommands(commands.Cog):

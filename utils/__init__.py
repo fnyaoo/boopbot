@@ -1,3 +1,2 @@
-from .database import *
 from .funcs import *
-from .menus import *
+from . import ui, database, menus
