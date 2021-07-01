@@ -6,7 +6,6 @@ class MyHelpCommand(commands.HelpCommand):
     def __init__(self, **options):
         super().__init__(**options)
         self.splash = f'https://images-ext-2.discordapp.net/external/Nzf7XfPBxPFWzsf6QKm7EASPu8cUkI-JG0Uxy9Kk_Kw/%3Fsize%3D1024/https/cdn.discordapp.com/splashes/824997091075555419/877b556e3f34f2e63800ba246eb48103.png'
-    
     async def send_bot_help(self, mapping):
         mapping.pop(None)
         dest: discord.abc.Messageable = self.get_destination()
@@ -16,7 +15,7 @@ class MyHelpCommand(commands.HelpCommand):
             lambda k: (
                 mapping[k] != [] and 
                 any(command in filtered_commands for command in mapping[k])
-            ), 
+            ),
             mapping
         ))
 
@@ -31,7 +30,17 @@ class MyHelpCommand(commands.HelpCommand):
             url=self.splash
         ).add_field(
             name = 'Доступные категории',
-            value = '\n'.join([f"**{cog._qualified_name}**" for cog in cog_list])
+            value = '\n'.join(
+                [
+                    (
+                    "**"
+                    f"{getattr(cog, 'emoji_sign', discord.PartialEmoji(name = 'void', animated = False, id =827958334547951657))}"
+                    f"{getattr(cog, '_qualified_name', cog.qualified_name)} "
+                    f"({cog.qualified_name})"
+                    "**"
+                    ) for cog in cog_list
+                ]
+            )
         )
         await dest.send(embed=embed)
 
@@ -48,5 +57,5 @@ class Help(commands.Cog):
         self.bot.help_command = self._original_help_command
 
 
-def setup(bot): pass
-    # bot.add_cog(Help(bot))
+def setup(bot): 
+    bot.add_cog(Help(bot))
