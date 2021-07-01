@@ -11,6 +11,9 @@ class Badges(commands.Cog):
         self.bot = bot
         self.badges_client = BadgesManage()
 
+        self._qualified_name = 'Бейджи'
+        self.description = 'Команды, связанные с бейджами'
+
 
     async def send_cats(self, old_msg):
         rows = self.badges_client.fetch_categories()

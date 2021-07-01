@@ -48,6 +48,9 @@ class ColorChanger(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
+        self._qualified_name = 'Цвета'
+        self.description = 'Команды, связванные с разработкой цветов'
+
     @commands.Cog.listener()
     async def on_ready(self):
         channel = self.bot.get_channel(827470485604401192)
@@ -145,5 +148,4 @@ class ColorChanger(commands.Cog):
 
 
 def setup(bot):
-    if not 'ColorChanger' in bot.cogs:
-        bot.add_cog(ColorChanger(bot))
+    bot.add_cog(ColorChanger(bot))
