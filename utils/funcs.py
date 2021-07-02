@@ -190,7 +190,7 @@ config = _Config()
 
 def generate_setup(directory: str):
     def setup(bot: commands.Bot):
-        extensions = (name[:-3] for name in os.listdir(directory) if name.endswith('.py') and name != '__init__.py')
+        extensions = (name[:-3] for name in os.listdir(directory) if name.endswith('.py') and name not in ('__init__.py'))
         for ext in extensions:
             try:
                 bot.load_extension(f'{directory}.{ext}')
