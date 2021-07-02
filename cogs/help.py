@@ -95,7 +95,7 @@ class CogSelect(discord.ui.Select):
 
         for command in command_list:
             name = command.name
-            description = command.description or 'Нет описания'
+            description = command.short_doc or 'Нет описания'
             if len(description) > 50:
                 description = description[:-(len(description)-47)] + '...'
             
@@ -131,7 +131,7 @@ class GroupSelect(discord.ui.Select):
 
         for command in command_list:
             name = command.name
-            description = command.description or 'Нет описания'
+            description = command.short_doc or 'Нет описания'
             if len(description) > 50:
                 description = description[:-(len(description)-47)] + '...'
             
@@ -241,7 +241,7 @@ class MyHelpCommand(commands.HelpCommand):
         for command in command_list:
             embed.add_field(
                 name = f'{self.context.clean_prefix}{command.name}',
-                value = command.description or 'Нет описания'
+                value = command.short_doc or 'Нет описания'
             )
         
         self.view.clear_items()
@@ -257,7 +257,7 @@ class MyHelpCommand(commands.HelpCommand):
 
         embed = discord.Embed(
             title = f'Команда {command.name}',
-            description = command.description or 'Нет описания',
+            description = command.short_doc or 'Нет описания',
             color = 0x2f3136
         ).add_field(
             name = 'Сигнатура',
@@ -291,26 +291,29 @@ class MyHelpCommand(commands.HelpCommand):
     async def send_group_help(self, group: Group, interaction: discord.Interaction = None):
         command_list: List[Command] = await self.filter_commands(list(group.commands))
         parents = group.parents
+        cmds_string = '\n'.join(
+            [
+                f"{self.context.clean_prefix}"
+                f"{group.full_parent_name+ (' ' if group.full_parent_name else '')}"
+                f"{group.name} {cmd.name}{f' – {cmd.short_doc}' if cmd.short_doc else ''}" 
+                for cmd in command_list
+            ]
+        )
+        chunks = [cmds_string[i:i+1024] for i in range(0, len(cmds_string), 1024)]
 
         embed = discord.Embed(
             title = f'Группа комманд {group.name}',
-            description = group.description or 'Нет описания',
+            description = group.short_doc or 'Нет описания',
             color = 0x2f3136
         ).add_field(
             name = 'Сигнатура',
             value = self.get_command_signature(group)
-        ).add_field(
-            name = 'Команды',
-            value = '\n'.join(
-                [
-                    f"{self.context.clean_prefix}"
-                    f"{group.full_parent_name+ (' ' if group.full_parent_name else '')}"
-                    f"{group.name} {cmd.name}{f' – {cmd.description}' if cmd.description else ''}" 
-                    for cmd in command_list
-                ]
-            ),
-            inline = False
         )
+        for chunk in chunks:
+            embed.add_field(
+                name = 'Команды',
+                value = chunk
+            )
         if group.cog is not None:
             embed.add_field(
                 name = 'Категория',
