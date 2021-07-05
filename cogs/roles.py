@@ -78,8 +78,8 @@ class ColorChanger(commands.Cog):
             '♟️': 833053487033090058,
         }
 
-        for key in self.roles:
-            self.roles[key] = channel.guild.get_role(self.roles[key])
+        for key, value in self.roles.items():
+            self.roles[key] = channel.guild.get_role(value)
 
         self.message = await channel.fetch_message(833406896072949790)
     
@@ -122,7 +122,7 @@ class ColorChanger(commands.Cog):
     @commands.command(name='color_resend')
     @commands.is_owner()
     async def embed_resend(self, ctx):
-        text = '<@&833053374600577026> — Кальмар' \
+        text =   '<@&833053374600577026> — Кальмар' \
                '\n<@&833053402405142538> — Коралловый' \
                '\n<@&833053432234901505> — Красный фонарь' \
                '\n<@&833235083355095082> — Бежевый' \
