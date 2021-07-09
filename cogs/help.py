@@ -279,7 +279,7 @@ class MyHelpCommand(commands.HelpCommand):
         if len(command.aliases) > 0:
             embed.add_field(
                 name = 'Другие названия',
-                value = ', '.join(command.aliases) or 'Отсутствует'
+                value = ', '.join(command.aliases)
             )
         
         self.view.clear_items()

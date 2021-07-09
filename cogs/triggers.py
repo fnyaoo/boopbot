@@ -11,7 +11,6 @@ class Triggers(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.regex = re.compile(r"<;(?P<name>[a-zA-Z0-9_]{2,32});>")
-        print(self.regex)
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
