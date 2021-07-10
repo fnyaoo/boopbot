@@ -1,6 +1,16 @@
+import discord
 from discord.ext import commands
 
+roles = {
+    '🦑','👛','🏮','👌🏻','🌆',
+    '📒','🍌','🍃','🐢','📗',
+    '🧪','🩲','🌊','🧿','🔮',
+    '🍆','🌺','🦔','💿','♟️'
+}
+
 def setup(bot: commands.Bot):
+    bot.color_ratelimit = set()
+
     async def log_delete(message):
         if message.author.id == 234395307759108106: return
         if message.channel.id == 827611418286358540: return
@@ -28,5 +38,35 @@ def setup(bot: commands.Bot):
 
         bot.dispatch('log_voice_state_update', member, before, after, color)
     bot.add_listener(log_voice, 'on_voice_state_update')
-    
-    
+
+    async def add_color(payload: discord.RawReactionActionEvent):
+        if payload.message_id != 833406896072949790:
+            return
+        if not payload.emoji.name in roles:
+            return
+        if payload.member.id == bot.user.id:
+            return
+
+        lims: set = bot.color_ratelimit
+        if payload.member in lims:
+            return
+        lims.add(payload.member)
+
+        bot.dispatch('add_color', payload.member, payload.emoji.name)
+        try:
+            lims.remove(payload.member)
+        except KeyError: 
+            pass
+
+    bot.add_listener(add_color, 'on_raw_reaction_add')
+
+    async def remove_color(payload: discord.RawReactionActionEvent):
+        if payload.member in bot.color_ratelimit:
+            return
+        if not payload.message_id == 833406896072949790:
+            return
+        if not payload.emoji.name in roles:
+            return
+
+        bot.dispatch('remove_color', payload.member, payload.emoji.name)
+    bot.add_listener(remove_color, 'on_raw_reaction_remove')

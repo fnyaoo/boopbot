@@ -81,41 +81,23 @@ class ColorChanger(commands.Cog):
         for key, value in self.roles.items():
             self.roles[key] = channel.guild.get_role(value)
 
-        self.message = await channel.fetch_message(833406896072949790)
+        self.message: discord.Message = await channel.fetch_message(833406896072949790)
     
     @commands.Cog.listener()
-    async def on_raw_reaction_add(self, payload):
-        channel = self.bot.get_channel(payload.channel_id)
-        message = await channel.fetch_message(payload.message_id)
-        if not message == self.message:
-            return
-        if not payload.emoji.name in self.roles:
-            return
-        if payload.member.id == self.bot.user.id:
-            return
-        
-        user_roles = list(filter(lambda x: x.name in self.roles, payload.member.roles))
+    async def on_add_color(self, member, emoji):
+        user_roles = list(filter(lambda x: x.name in self.roles, member.roles))
         if len(user_roles) > 0:
             for role in user_roles:
-                reaction = discord.utils.get(message.reactions, emoji=role.name)
-                await reaction.remove(payload.member)
-        
+                reaction = discord.utils.get(self.message.reactions, emoji=role.name)
+                if reaction is not None:
+                    await reaction.remove(member)
 
-        new_role = self.roles[payload.emoji.name]
-        await payload.member.add_roles(new_role)
+        new_role = self.roles[emoji]
+        await member.add_roles(new_role)
     
     @commands.Cog.listener()
-    async def on_raw_reaction_remove(self, payload):
-        channel = self.bot.get_channel(payload.channel_id)
-        message = await channel.fetch_message(payload.message_id)
-        member = channel.guild.get_member(payload.user_id)
-
-        if not message == self.message:
-            return
-        if not payload.emoji.name in self.roles:
-            return
-        
-        role = self.roles[payload.emoji.name]
+    async def on_remove_color(self, member, emoji):
+        role = self.roles[emoji]
         if role in member.roles:
             await member.remove_roles(role)
         
