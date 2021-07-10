@@ -8,7 +8,7 @@ from utils.database import MembersDB as modaler
 
 class AdminFlags(commands.FlagConverter, prefix='--', delimiter=' '):
     target: List[discord.Member] = commands.flag(aliases=['member'], default=[])
-    limit: int = commands.flag(aliases=['count'], default=100)
+    limit: int = commands.flag(aliases=['count'], default=10)
 
 class AdminCommands(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -35,7 +35,7 @@ class AdminCommands(commands.Cog):
             embed=discord.Embed(
                 title = f'✅ Удалено {len(deleted)} сообщений',
                 color = 0x77b255,
-                description = '\n'.join(f'{author.mention}: {count} сообщений' for author, count in text.values())
+                description = '\n'.join([f'{author.mention}: {count} сообщений' for author, count in text.values()])
             )
         )
 
@@ -43,7 +43,7 @@ class AdminCommands(commands.Cog):
     @is_admin()
     async def show_json(self, ctx, *, flags: AdminFlags):
         targets = flags.target
-        await ctx.reply('\n'.join(f'```py\n{modaler(target.id).member.json}\n```' for target in targets))
+        await ctx.reply('\n'.join([f'```py\n{modaler(target.id).member.json}\n```' for target in targets]))
     
 def setup(bot):
     bot.add_cog(AdminCommands(bot))
