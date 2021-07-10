@@ -35,7 +35,7 @@ class AdminCommands(commands.Cog):
             embed=discord.Embed(
                 title = f'✅ Удалено {len(deleted)} сообщений',
                 color = 0x77b255,
-                description = '\n'.join([f'{author.mention}: {count} сообщений' for author, count in text.values()])
+                description = '\n'.join([f'{author.mention}: {count} сообщений' for author, count in text.items()])
             )
         )
 
