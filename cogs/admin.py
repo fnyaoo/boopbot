@@ -1,13 +1,14 @@
+from utils.funcs import inflect_by_amount
 import discord
 from discord.ext import commands
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 from checks import is_admin
 from utils.database import MembersDB as modaler
 
 
 class AdminFlags(commands.FlagConverter, prefix='--', delimiter=' '):
-    target: List[discord.Member] = commands.flag(aliases=['member'], default=[])
+    target: Tuple[discord.Member, ...] = commands.flag(aliases=['member'], default=[])
     limit: int = commands.flag(aliases=['count'], default=10)
 
 class AdminCommands(commands.Cog):
@@ -33,9 +34,9 @@ class AdminCommands(commands.Cog):
 
         await ctx.send(
             embed=discord.Embed(
-                title = f'✅ Удалено {len(deleted)} сообщений',
+                title = f'✅ Удалено {inflect_by_amount(len(deleted), "сообщений")}',
                 color = 0x77b255,
-                description = '\n'.join([f'{author.mention}: {count} сообщений' for author, count in text.items()])
+                description = '\n'.join([f'{author.mention}: {inflect_by_amount(count, "сообщений")}' for author, count in text.items()])
             )
         )
 
