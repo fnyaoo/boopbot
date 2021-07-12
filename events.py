@@ -45,8 +45,9 @@ def setup(bot: commands.Bot):
             return
         if payload.member.id == bot.user.id:
             return
+        member = bot.get_guild(824997091075555419).get_member(payload.user_id)
 
-        bot.dispatch('add_color', payload.member, payload.emoji.name)
+        bot.dispatch('add_color', member, payload.emoji.name)
 
     bot.add_listener(add_color, 'on_raw_reaction_add')
 
@@ -55,6 +56,7 @@ def setup(bot: commands.Bot):
             return
         if not payload.emoji.name in roles:
             return
+        member = bot.get_guild(824997091075555419).get_member(payload.user_id)
 
-        bot.dispatch('remove_color', payload.member, payload.emoji.name)
+        bot.dispatch('remove_color', member, payload.emoji.name)
     bot.add_listener(remove_color, 'on_raw_reaction_remove')
