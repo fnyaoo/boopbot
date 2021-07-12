@@ -51,8 +51,6 @@ def setup(bot: commands.Bot):
     bot.add_listener(add_color, 'on_raw_reaction_add')
 
     async def remove_color(payload: discord.RawReactionActionEvent):
-        if payload.member in bot.color_ratelimit:
-            return
         if not payload.message_id == 833406896072949790:
             return
         if not payload.emoji.name in roles:
