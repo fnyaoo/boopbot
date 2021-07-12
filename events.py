@@ -9,7 +9,6 @@ roles = {
 }
 
 def setup(bot: commands.Bot):
-    bot.color_ratelimit = set()
 
     async def log_delete(message):
         if message.author.id == 234395307759108106: return
@@ -47,16 +46,7 @@ def setup(bot: commands.Bot):
         if payload.member.id == bot.user.id:
             return
 
-        lims: set = bot.color_ratelimit
-        if payload.member in lims:
-            return
-        lims.add(payload.member)
-
         bot.dispatch('add_color', payload.member, payload.emoji.name)
-        try:
-            lims.remove(payload.member)
-        except KeyError: 
-            pass
 
     bot.add_listener(add_color, 'on_raw_reaction_add')
 
