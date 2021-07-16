@@ -1,12 +1,11 @@
 from asyncio import TimeoutError
-from discord import ButtonStyle
-from utils.menus import Confirm, ResponseType
+from utils.menus import Confirm
 import discord
 from discord.ext import commands
 
 class TicTacToeButton(discord.ui.Button['TicTacToe']):
     def __init__(self, x: int, y: int):
-        super().__init__(style=discord.ButtonStyle.secondary, label='\u200b', group=y)
+        super().__init__(style=discord.ButtonStyle.secondary, label='\u200b', row=y)
         self.x = x
         self.y = y
 
