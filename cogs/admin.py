@@ -32,7 +32,7 @@ class AdminCommands(commands.Cog):
                 condition.append(flags.contains in m.content)
             return all(condition)
 
-        deleted: List[discord.Message] = await ctx.channel.purge(limit=flags.limit, check=is_target)
+        deleted: List[discord.Message] = await ctx.channel.purge(limit=flags.limit+1, check=is_target)
 
         text: Dict[discord.Member, int] = {}
         for message in deleted:
