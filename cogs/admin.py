@@ -41,7 +41,7 @@ class AdminCommands(commands.Cog):
 
         await ctx.send(
             embed=discord.Embed(
-                title = f'✅ Удалено {inflect_by_amount(len(deleted), "сообщений")} из {flags.limit}',
+                title = f'✅ Удалено {inflect_by_amount(len(deleted), "сообщений")} из {flags.limit} последних',
                 color = 0x77b255,
                 description = '\n'.join([f'{author.mention}: {inflect_by_amount(count, "сообщений")}' for author, count in text.items()])
             )
