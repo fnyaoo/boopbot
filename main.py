@@ -1,15 +1,11 @@
 from bot import BoopBot
 from os import environ
+from datetime import datetime
+
 from tortoise import Tortoise
+from utils import db
 
 environ['IS_HEROKU'] = "1" if 'HEROKU_APP_ID' in environ else "0"
-
-
-from datetime import datetime
-import discord
-from discord.ext import commands
-
-from utils import config
 
 bot = BoopBot()
 bot._program_start = datetime.utcnow()

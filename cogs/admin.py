@@ -46,17 +46,6 @@ class AdminCommands(commands.Cog):
                 description = '\n'.join([f'{author.mention}: {inflect_by_amount(count, "сообщений")}' for author, count in text.items()])
             )
         )
-
-    @commands.command(name = 'getdata')
-    @is_admin()
-    async def show_json(self, ctx, *, flags: AdminFlags):
-        targets = flags.target
-        await ctx.reply('\n'.join(
-            [
-                f'```py\n{(await MemberDB(target.id).fetch()).json}\n```'
-                for target in targets
-            ]
-        ))
     
 def setup(bot):
     bot.add_cog(AdminCommands(bot))
