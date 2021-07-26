@@ -48,6 +48,6 @@ class BoopBot(commands.Bot):
                     description = 'Бот загружен', 
                     timestamp = self._program_start
                 ).set_footer(
-                    text = self.command_prefix
+                    text = 'Префикс: \'!\''
                 )
             )
