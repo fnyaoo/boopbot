@@ -147,8 +147,7 @@ class TicTacToe(commands.Cog):
             if itr_result:
                 await game_msg.delete()
                 await ctx.reply('Игра окончана таймаутом.')
-            else:
-                await game_msg.edit('\n'.join([f'{player.mention} выбрал(а) {view.get_pressed(player).name}' for player in view.players]))
+            
         elif result is None:
             await ctx.send(f'{ctx.author.mention}, `{member.display_name}` не успел(а) ответить.')
         else:

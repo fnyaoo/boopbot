@@ -48,8 +48,8 @@ class RPSView(discord.ui.View):
 
         self.mapping = {
             RPSType.rock:     RPSButton('Камень',  emoji = '\U0001faa8', id = RPSType.rock),
+            RPSType.scissors: RPSButton('Ножницы', emoji = '\U00002702', id = RPSType.scissors),
             RPSType.paper:    RPSButton('Бумага',  emoji = '\U0001f4f0', id = RPSType.paper),
-            RPSType.scissors: RPSButton('Ножницы', emoji = '\U00002702', id = RPSType.scissors)
         }
         for button in self.mapping.values():
             self.add_item(button)
@@ -96,18 +96,6 @@ class RockPaperScissors(commands.Cog):
 
         ends = '\n'.join([f'<@{key}> выбрал(а) {game.get_pressed_name(key)}' for key in game.players])
         await game_msg.edit(content = ends)
-        
-    # @commands.command(name = 'test')
-    # @commands.is_owner()
-    # async def test_button(self, ctx):
-    #     class Nottub(discord.ui.Button):
-    #         def __init__(self, secret):
-    #             super().__init__(style, label = label)
-    #         @discord.ui.button(label = 'Click me!', style = ButtonStyle.grey)
-    #         async def clickme(self, inter: discord.Interaction):
-    #             await inter.response.edit_message()
-    #     class Weiv(discord.ui.View):
-    #         pass
 
 def setup(bot):
     bot.add_cog(RockPaperScissors(bot))
