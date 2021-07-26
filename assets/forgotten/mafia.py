@@ -83,17 +83,17 @@ class Mafia(commands.Cog):
                 value = 'Красная роль. Обычный мирный житель. Ночью спит.'
             )
             await msg.edit(content = None, embed = embed)
-            react, user = await self.bot.wait_for('reaction_add', check=check)
+            react, user = await self.bot.wait_for('reaction_add', check = check)
             await react.remove(user)
             emoji = str(react.emoji)
             
             if emoji == ce.mafia_change(True):
-                mafia_count += 1
+                mafia_count + =  1
             elif emoji == ce.mafia_change(False):
-                mafia_count -= 1
+                mafia_count - =  1
             elif emoji == ce.mafia("murder"):
                 is_murder = not is_murder
-                mafia_count += -1 if is_murder else 1
+                mafia_count + =  -1 if is_murder else 1
             elif emoji == ce.mafia("butterfly"):
                 is_butterfly = not is_butterfly
             elif emoji == ce.mafia("doctor"):
@@ -163,12 +163,12 @@ class Mafia(commands.Cog):
     async def mafia(self, inter: Interaction):
         options = inter.data.options
         if len(options) < 1:
-            return await inter.reply('Слишком мало аргументов', ephemeral=True)
+            return await inter.reply('Слишком мало аргументов', ephemeral = True)
         if len(options) > 1:
-            return await inter.reply('Слишком много аргументов', ephemeral=True)
+            return await inter.reply('Слишком много аргументов', ephemeral = True)
         
         for option in options:
-            if self.lobby != None:
+            if self.lobby ! =  None:
                 if option == 'lobby':
                     if options[option].value == 'join':
                         if not self.lobby['is_started']:
@@ -176,14 +176,14 @@ class Mafia(commands.Cog):
                                 self.lobby['members'][inter.author] = None
                                 return await inter.reply(f'{inter.author.mention} присоединился')
                             else:
-                                return await inter.reply('Вы уже всупили в игру', ephemeral=True)
+                                return await inter.reply('Вы уже всупили в игру', ephemeral = True)
                         else:
-                            return await inter.reply('Игра уже началась', ephemeral=True)
+                            return await inter.reply('Игра уже началась', ephemeral = True)
 
                     elif options[option].value == 'status':
                         members_list = ''
                         for member in self.lobby['members']:
-                            members_list += ce.void() + member.mention + '\n'
+                            members_list + =  ce.void() + member.mention + '\n'
                         
                         embed = discord.Embed(
                             title = 'Статус игры',
@@ -197,25 +197,25 @@ class Mafia(commands.Cog):
                     elif options[option].value == 'role':
                         if inter.author in self.lobby['members']:
                             if self.lobby['is_started']:
-                                return await inter.reply(f'Ваша роль: {self.lobby["members"][inter.author]}', ephemeral=True)
+                                return await inter.reply(f'Ваша роль: {self.lobby["members"][inter.author]}', ephemeral = True)
                             else:
-                                return await inter.reply('Игра ещё не запущена', ephemeral=True)
+                                return await inter.reply('Игра ещё не запущена', ephemeral = True)
                         else:
-                            return await inter.reply('Вы вне игры', ephemeral=True)
+                            return await inter.reply('Вы вне игры', ephemeral = True)
 
                 elif option == 'mod':
                     if self.lobby['mod'] == inter.author:
                         if options[option].value == 'create':
-                            return await inter.reply('Лобби уже запущено', ephemeral=True)
+                            return await inter.reply('Лобби уже запущено', ephemeral = True)
 
                         elif options[option].value == 'next_turn':
-                            self.lobby['turn'] += 1
+                            self.lobby['turn'] + =  1
                             if not self.lobby['is_started']:
                                 self.lobby['is_started'] = True
                                 await self.game_start(inter)
                             else:
                                 def check():
-                                    peace = len(filter(lambda x: x != 'mafia' and x != 'murder', self.lobby['members'].values()))
+                                    peace = len(filter(lambda x: x ! =  'mafia' and x ! =  'murder', self.lobby['members'].values()))
                                     alls = len(self.lobby['members'])
                                     murders = alls - peace
                                     return peace > murders
@@ -227,7 +227,7 @@ class Mafia(commands.Cog):
                             self.lobby = None
                             return await inter.reply('Игра остановлена')
                     else:
-                        return await inter.reply('У вас нет прав на выполнение команды', ephemeral=True)
+                        return await inter.reply('У вас нет прав на выполнение команды', ephemeral = True)
                 
             else:
                 if option == 'mod':
@@ -239,7 +239,7 @@ class Mafia(commands.Cog):
                         def check(r, u):
                             return inter.author.id == u.id and str(r.emoji) in rules
 
-                        react, user = await self.bot.wait_for('reaction_add', check=check)
+                        react, user = await self.bot.wait_for('reaction_add', check = check)
                         self.lobby = {
                             'rule': rules[str(react.emoji)]['rule'],
                             'mod': user,
@@ -251,7 +251,7 @@ class Mafia(commands.Cog):
                         await choice.clear_reactions()
                         return await choice.edit(content = 'Лобби создано', embed = None)
                     else:
-                        return await inter.reply('Лобби ещё не создано', ephemeral=True)
+                        return await inter.reply('Лобби ещё не создано', ephemeral = True)
 
 def setup(bot):
     bot.add_cog(Mafia(bot))

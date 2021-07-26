@@ -13,7 +13,7 @@ class RPSType:
 
 class RPSButton(discord.ui.Button['RockPaperScissors']): 
     def __init__(self, label: str, emoji: str, id: RPSType):
-        super().__init__(style=ButtonStyle.blurple, label=label, emoji=emoji, custom_id=str(id))
+        super().__init__(style = ButtonStyle.blurple, label = label, emoji = emoji, custom_id = str(id))
         self.id = id
         self.name = ' '.join((emoji, label))
     
@@ -22,7 +22,7 @@ class RPSButton(discord.ui.Button['RockPaperScissors']):
         view: RockPaperScissors = self.view
 
         view.players[interaction.user.id] = self.id
-        await interaction.response.send_message(f'Ты выбрал {self.name}', ephemeral=True)
+        await interaction.response.send_message(f'Ты выбрал {self.name}', ephemeral = True)
         
         p = True
         for key in view.players:
@@ -38,18 +38,18 @@ class RPSButton(discord.ui.Button['RockPaperScissors']):
                 child.disabled = True
             view.stop()
             
-        await interaction.response.edit_message(view=view)
+        await interaction.response.edit_message(view = view)
 
 class RockPaperScissors(discord.ui.View):
     def __init__(self, players: set[int]):
-        super().__init__(timeout=30)
+        super().__init__(timeout = 30)
         self.players = {p: RPSType.none for p in players}
         
 
         self.mapping = {
-            RPSType.rock:     RPSButton('Камень',  emoji='\U0001faa8', id=RPSType.rock),
-            RPSType.paper:    RPSButton('Бумага',  emoji='\U0001f4f0', id=RPSType.paper),
-            RPSType.scissors: RPSButton('Ножницы', emoji='\U00002702', id=RPSType.scissors)
+            RPSType.rock:     RPSButton('Камень',  emoji = '\U0001faa8', id = RPSType.rock),
+            RPSType.paper:    RPSButton('Бумага',  emoji = '\U0001f4f0', id = RPSType.paper),
+            RPSType.scissors: RPSButton('Ножницы', emoji = '\U00002702', id = RPSType.scissors)
         }
         for button in self.mapping.values():
             self.add_item(button)
@@ -60,8 +60,8 @@ class RockPaperScissors(discord.ui.View):
                 return True
             else:
                 button = self.get_pressed_name(interaction.user.id)
-                await interaction.response.send_message(f'Вы уже выбрали {button}', ephemeral=True)
-        await interaction.response.send_message(f'Извините, но вы не участниик игры', ephemeral=True)
+                await interaction.response.send_message(f'Вы уже выбрали {button}', ephemeral = True)
+        await interaction.response.send_message(f'Извините, но вы не участниик игры', ephemeral = True)
         return False
     
     def get_pressed_name(self, user):
@@ -83,7 +83,7 @@ class RockPaperScissors(commands.Cog):
             return await ctx.send(f'Недостаточно игроков ({len(players)}, 2 минимум)')
         
         msg = await ctx.send(f'{", ".join([m.mention for m in members])}, нажмите ✅, чтобы принять вызов')
-        result = await Confirm(msg, players, ResponseType.filter_of_given, timeout=30).reconst(ctx)
+        result = await Confirm(msg, players, ResponseType.filter_of_given, timeout = 30).reconst(ctx)
 
         if len(result) < 2:
             return await ctx.send(f'Недостаточно игроков ({len(result)}, 2 минимум)')
@@ -95,15 +95,15 @@ class RockPaperScissors(commands.Cog):
         results = game.players
 
         ends = '\n'.join([f'<@{key}> выбрал(а) {game.get_pressed_name(key)}' for key in game.players])
-        await game_msg.edit(content=ends)
+        await game_msg.edit(content = ends)
         
     # @commands.command(name = 'test')
     # @commands.is_owner()
     # async def test_button(self, ctx):
     #     class Nottub(discord.ui.Button):
     #         def __init__(self, secret):
-    #             super().__init__(style, label=label)
-    #         @discord.ui.button(label='Click me!', style=ButtonStyle.grey)
+    #             super().__init__(style, label = label)
+    #         @discord.ui.button(label = 'Click me!', style = ButtonStyle.grey)
     #         async def clickme(self, inter: discord.Interaction):
     #             await inter.response.edit_message()
     #     class Weiv(discord.ui.View):

@@ -129,4 +129,5 @@ dmypy.json
 .pyre/
 
 # m1raynee's files
-assets/*.db
+*.db
+*.sqlite3

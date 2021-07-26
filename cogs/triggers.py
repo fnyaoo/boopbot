@@ -39,7 +39,7 @@ class Triggers(commands.Cog):
         if '<3' in content:
             await message.add_reaction('♥')
     
-    async def send_webhooked(self, message, content, reason=None):
+    async def send_webhooked(self, message, content, reason = None):
         wh = await message.channel.create_webhook(
             name = message.author.display_name, 
             avatar = await message.author.avatar.read(),
@@ -51,10 +51,10 @@ class Triggers(commands.Cog):
     
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
-        if str(reaction.emoji) != '🔁':
+        if str(reaction.emoji) ! =  '🔁':
             return
         msg = reaction.message
-        if msg.author != user:
+        if msg.author ! =  user:
             return
 
         await self.send_webhooked(msg, f'{msg.content.translate(layout)}\n> **Исправлена раскладка клавиатуры**', 'Исправление раскладки')

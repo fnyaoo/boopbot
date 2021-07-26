@@ -6,7 +6,7 @@ from discord.ext import commands
 
 class TicTacToeButton(discord.ui.Button['TicTacToe']):
     def __init__(self, x: int, y: int):
-        super().__init__(style=discord.ButtonStyle.secondary, label='\u200b', group=y)
+        super().__init__(style = discord.ButtonStyle.secondary, label = '\u200b', group = y)
         self.x = x
         self.y = y
 
@@ -49,7 +49,7 @@ class TicTacToeButton(discord.ui.Button['TicTacToe']):
 
             view.stop()
 
-        await interaction.response.edit_message(content=content, view=view)
+        await interaction.response.edit_message(content = content, view = view)
 
 class TTTView(discord.ui.View):
     X = -1
@@ -57,7 +57,7 @@ class TTTView(discord.ui.View):
     Tie = 2
 
     def __init__(self, p1: discord.Member, p2: discord.Member):
-        super().__init__(timeout=60)
+        super().__init__(timeout = 60)
         self.current_player = self.X
         self.board = [
             [0, 0, 0],
@@ -110,7 +110,7 @@ class TTTView(discord.ui.View):
             return self.X
 
         # If we're here, we need to check if a tie was made
-        if all(i != 0 for row in self.board for i in row):
+        if all(i ! =  0 for row in self.board for i in row):
             return self.Tie
 
         return None
@@ -125,11 +125,11 @@ class TicTacToe(commands.Cog):
             msg = await ctx.send(f'`{ctx.author.display_name}` хочет сыграть в крестики-нолики.\nЧтобы принять вызов, нажмите ✅')
             await msg.add_reaction('✅')
             def check(r: discord.Reaction, u):
-                return u != ctx.author and \
+                return u ! =  ctx.author and \
                     r.message == msg and \
                     not u.bot
             try:
-                _, user = await self.bot.wait_for('reaction_add', check=check, timeout=90)
+                _, user = await self.bot.wait_for('reaction_add', check = check, timeout = 90)
                 result = True
                 member = user
             except TimeoutError:
@@ -139,10 +139,10 @@ class TicTacToe(commands.Cog):
             if member.bot:
                 return await ctx.send('Нельзя игратьс ботом.')
             m = await ctx.send(f'{member.mention}, `{ctx.author.display_name}` хочет сыграть в крестики-нолики')
-            result = await Confirm(m, [member.id], timeout=30).reconst(ctx)
+            result = await Confirm(m, [member.id], timeout = 30).reconst(ctx)
         if result:
             view = TTTView(ctx.author, member)
-            game_msg = await ctx.send(f'Крестики-нолики: X ({ctx.author.mention}) ходит', view=view)
+            game_msg = await ctx.send(f'Крестики-нолики: X ({ctx.author.mention}) ходит', view = view)
             itr_result = await view.wait()
             if itr_result:
                 await game_msg.delete()

@@ -39,7 +39,7 @@ def setup(bot: commands.Bot):
     bot.add_listener(log_voice, 'on_voice_state_update')
 
     async def add_color(payload: discord.RawReactionActionEvent):
-        if payload.message_id != 833406896072949790:
+        if payload.message_id !=  833406896072949790:
             return
         if not payload.emoji.name in roles:
             return

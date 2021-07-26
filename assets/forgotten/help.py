@@ -112,22 +112,22 @@ class MyHelpCommand(commands.HelpCommand):
             value = '\n'.join(
                 [
                     (
-                    f"{getattr(cog, 'emoji_sign', discord.PartialEmoji(name = 'void', animated = False, id =827958334547951657))} "
+                    f"{getattr(cog, 'emoji_sign', discord.PartialEmoji(name = 'void', animated = False, id  = 827958334547951657))} "
                     f"{getattr(cog, '_qualified_name', cog.qualified_name)} "
                     f"({cog.qualified_name})"
                     ) for cog in cog_list
                 ]
             )
-        ).set_image(url=self.splash)
+        ).set_image(url = self.splash)
         self.view = HelpView(self.context.author, self)
         self.view.add_item(BotHelpSelect(cog_list))
         if interaction is None:
             if self.init_message is None:
-                self.init_message = await dest.send(embed=embed, view=self.view)
+                self.init_message = await dest.send(embed = embed, view = self.view)
             else:
-                await self.init_message.edit(embed=embed, view=self.view)
+                await self.init_message.edit(embed = embed, view = self.view)
         else:
-            await interaction.response.edit_message(embed=embed, view=self.view)
+            await interaction.response.edit_message(embed = embed, view = self.view)
 
     async def send_cog_help(self, cog: commands.Cog, **kwargs):
         interaction: discord.Interaction = kwargs.get('interaction', None)
@@ -143,7 +143,7 @@ class MyHelpCommand(commands.HelpCommand):
             title = f'{emoji_sign if emoji_sign else ""} {qualified_name}',
             description = f'Описание категории: {description}',
             color = 0x2f3136
-        ).set_image(url=self.splash)
+        ).set_image(url = self.splash)
 
         for command in filtered_commands:
             embed.add_field(
@@ -151,9 +151,9 @@ class MyHelpCommand(commands.HelpCommand):
                 value = command.description or 'Нет описания'
             )
         if interaction is None:
-            await self.init_message.edit(embed=embed, view=self.view)
+            await self.init_message.edit(embed = embed, view = self.view)
         else:
-            await interaction.response.edit_message(embed=embed, view=self.view)
+            await interaction.response.edit_message(embed = embed, view = self.view)
         
     async def send_command_help(self, command: Command, **kwargs):
         interaction: discord.Interaction = kwargs.get('interaction', None)
@@ -173,7 +173,7 @@ class MyHelpCommand(commands.HelpCommand):
             value = 'self.get_command_signature(command)'
         )
         if interaction is None:
-            await self.init_message.edit(embed=embed)
+            await self.init_message.edit(embed = embed)
 
 
 class Help(commands.Cog):

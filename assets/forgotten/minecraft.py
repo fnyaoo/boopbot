@@ -11,12 +11,12 @@ class ServerStatus(commands.Cog):
         self.last_lookup = None
 
 
-    @tasks.loop(seconds=30)
+    @tasks.loop(seconds = 30)
     async def online_checker(self):
         peoples = self.server.status().players.online
         new_name = f'Онлайн: {peoples}'
-        if self.last_lookup != peoples and self.category.name != new_name:
-            await self.category.edit(name=new_name)
+        if self.last_lookup ! =  peoples and self.category.name ! =  new_name:
+            await self.category.edit(name = new_name)
             self.last_lookup = peoples
         
         query = self.server.query()
@@ -37,16 +37,16 @@ class ServerStatus(commands.Cog):
             await channel.delete()
         self.online_checker.start()
 
-    @commands.command(name='rcon')
+    @commands.command(name = 'rcon')
     @commands.is_owner()
-    async def exec_rcon(self, ctx, command, *, args=None):
+    async def exec_rcon(self, ctx, command, *, args = None):
         if args is not None:
             args = args.split(' ')
             response = await rcon(command, *args, 
-                                  host='135.181.126.170', port=25575, passwd='0ko65Uvy')
+                                  host = '135.181.126.170', port = 25575, passwd = '0ko65Uvy')
         else:
             response = await rcon(command, 
-                                  host='135.181.126.170', port=25575, passwd='0ko65Uvy')
+                                  host = '135.181.126.170', port = 25575, passwd = '0ko65Uvy')
         await ctx.send(f'```nim\n{response}\n```')
 
 def setup(bot):

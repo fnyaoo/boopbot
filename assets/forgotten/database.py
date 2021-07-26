@@ -32,9 +32,9 @@ class BaseModel(Model):
 
 # base member modal
 class Members(BaseModel):
-    discord_id = CharField(18, primary_key=True)
-    json = JSONField(null=True)
-    score = IntegerField(default=0)
+    discord_id = CharField(18, primary_key = True)
+    json = JSONField(null = True)
+    score = IntegerField(default = 0)
 
 # badge hierarchy
 class Badge_Category(BaseModel):
@@ -44,7 +44,7 @@ class Badge_Products(BaseModel):
     char = CharField(16)
     name = CharField()
     description = CharField()
-    category = ForeignKeyField(Badge_Category, on_delete='cascade', on_update='cascade')
+    category = ForeignKeyField(Badge_Category, on_delete = 'cascade', on_update = 'cascade')
 
 
 iniciate_json = {
@@ -188,7 +188,7 @@ class _Scoring:
     def __init__(self):
         self._query = (Members
             .select()
-            .where(Members.score != 0)
+            .where(Members.score ! =  0)
             .order_by(Members.score)
         )
     

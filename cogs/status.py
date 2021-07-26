@@ -19,7 +19,7 @@ class StatusBar(commands.Cog):
 
         vc_member_count = 0
         for vc_channel in guild.voice_channels:
-            vc_member_count += len(vc_channel.members)
+            vc_member_count + =  len(vc_channel.members)
 
         embed = discord.Embed(
             title = guild.name,
@@ -33,7 +33,7 @@ class StatusBar(commands.Cog):
         )
         await self.message.edit(embed = embed)
 
-    @tasks.loop(minutes=1)
+    @tasks.loop(minutes = 1)
     async def ticker(self):
         await self.fetch()
 

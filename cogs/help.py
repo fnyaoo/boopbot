@@ -1,4 +1,4 @@
-from typing import List, NamedTuple, Optional, TypeVar, Union
+from typing import List, NamedTuple, Optional, Union
 import discord
 from discord.ext import commands
 from discord.ext.commands.core import Command, Group
@@ -16,10 +16,10 @@ class CogRepr(NamedTuple):
     def merged(self):
         return f'{self.emoji} {self.relevant} ({self.class_name})'
 
-def cog_qualifided(cogs):
+def cog_qualified(cogs):
     def foo(cog):
         return CogRepr(
-            emoji = getattr(cog, 'emoji_sign', str(discord.PartialEmoji(name = 'void', animated = False, id =827958334547951657))),
+            emoji = getattr(cog, 'emoji_sign', str(discord.PartialEmoji(name = 'void', animated = False, id = 869177561563926538))),
             relevant = getattr(cog, '_qualified_name', cog.qualified_name),
             class_name = cog.qualified_name,
             cog = cog)
@@ -66,10 +66,10 @@ class BotSelect(discord.ui.Select):
     view: "HelpView"
 
     def __init__(self, cog_list: List[commands.Cog]) -> None:
-        super().__init__(custom_id='cog_selection', placeholder='Выберите категорию')
+        super().__init__(custom_id = 'cog_selection', placeholder = 'Выберите категорию')
         self.cog_mapping = {}
         
-        for cog_repr in cog_qualifided(cog_list):
+        for cog_repr in cog_qualified(cog_list):
             description = getattr(cog_repr.cog, 'description', 'Без описания')
             if len(description) > 50:
                 description = description[:-(len(description)-47)] + '...'
@@ -90,7 +90,7 @@ class CogSelect(discord.ui.Select):
     view: "HelpView"
 
     def __init__(self, command_list: List[Command]) -> None:
-        super().__init__(custom_id='command_selection', placeholder='Выберите команду')
+        super().__init__(custom_id = 'command_selection', placeholder = 'Выберите команду')
         self.command_mapping = {}
 
         for command in command_list:
@@ -125,7 +125,7 @@ class GroupSelect(discord.ui.Select):
     view: "HelpView"
 
     def __init__(self, command_list: List[Union[Group, Command]]) -> None:
-        super().__init__(custom_id='group_commands_selection', placeholder='Выберите команду')
+        super().__init__(custom_id = 'group_commands_selection', placeholder = 'Выберите команду')
         self.command_mapping = {}
         self.current_page = None
 
@@ -198,11 +198,11 @@ class MyHelpCommand(commands.HelpCommand):
         if interaction is None:
             if self.message is None:
                 dst: discord.abc.Messageable = self.get_destination()
-                self.message = await dst.send(embed=embed, view=self.view)
+                self.message = await dst.send(embed = embed, view = self.view)
             else:
-                await self.message.edit(embed=embed, view=self.view)
+                await self.message.edit(embed = embed, view = self.view)
         else:
-            await interaction.response.edit_message(embed=embed, view=self.view)
+            await interaction.response.edit_message(embed = embed, view = self.view)
 
 
     @help_view
@@ -214,15 +214,15 @@ class MyHelpCommand(commands.HelpCommand):
             title = 'Команда помощи',
             color = 0x2f3136,
             description = (
-                "Привет! Надеюсь эта команда поможет тебе разобаться во всех командах этого бота. "
+                "Привет! Надеюсь эта команда поможет тебе разобраться во всех командах этого бота. "
                 "У меня есть пара категорий команд, выбери одну из них в выпадающем списке снизу."
             )
         ).add_field(
             name = 'Доступные категории',
             value = '\n'.join(
-                [cog_repr.merged for cog_repr in cog_qualifided(cog_list)]
+                [cog_repr.merged for cog_repr in cog_qualified(cog_list)]
             ) or 'Нет доступных категорий'
-        ).set_image(url=self.image)
+        ).set_image(url = self.image)
 
         self.view.clear_items()
         self.view.add_item(BotSelect(cog_list))
@@ -234,7 +234,7 @@ class MyHelpCommand(commands.HelpCommand):
         command_list: List[Command] = await self.filter_commands(cog.get_commands())
 
         embed = discord.Embed(
-            title = cog_qualifided(cog).merged,
+            title = cog_qualified(cog).merged,
             description = cog.description,
             color = 0x2f3136
         )
@@ -268,7 +268,7 @@ class MyHelpCommand(commands.HelpCommand):
             back_to = command.cog
             embed.add_field(
                 name = 'Категория',
-                value = cog_qualifided(command.cog).merged
+                value = cog_qualified(command.cog).merged
             )
         if command.full_parent_name:
             back_to = parents[0]
@@ -291,7 +291,7 @@ class MyHelpCommand(commands.HelpCommand):
     async def send_group_help(self, group: Group, interaction: discord.Interaction = None):
         command_list: List[Command] = await self.filter_commands(list(group.commands))
         parents = group.parents
-        cmds_string = '\n'.join(
+        commands_string = '\n'.join(
             [
                 f"{self.context.clean_prefix}"
                 f"{group.full_parent_name+ (' ' if group.full_parent_name else '')}"
@@ -299,7 +299,7 @@ class MyHelpCommand(commands.HelpCommand):
                 for cmd in command_list
             ]
         )
-        chunks = [cmds_string[i:i+1024] for i in range(0, len(cmds_string), 1024)]
+        chunks = [commands_string[i:i+1024] for i in range(0, len(commands_string), 1024)]
 
         embed = discord.Embed(
             title = f'Группа комманд {group.name}',
@@ -317,7 +317,7 @@ class MyHelpCommand(commands.HelpCommand):
         if group.cog is not None:
             embed.add_field(
                 name = 'Категория',
-                value = cog_qualifided(group.cog).merged
+                value = cog_qualified(group.cog).merged
             )
         if len(parents) > 0:
             embed.add_field(

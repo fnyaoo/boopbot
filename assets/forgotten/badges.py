@@ -4,7 +4,7 @@ from discord.ext import commands
 from errors import BadgeBadArgument
 from checks import is_admin
 from utils import config
-from utils.database import BadgesManage, MembersDB, Badge_Products
+from utils.db import BadgesManage, MembersDB, Badge_Products
 
 
 class Badges(commands.Cog):
@@ -28,7 +28,7 @@ class Badges(commands.Cog):
                 value = itr_category['description'],
                 inline = False
             )
-        await old_msg.edit(embed=embed)
+        await old_msg.edit(embed = embed)
 
     async def send_badges_by_cats(self, old_msg, cat):
         embed = discord.Embed(
@@ -42,33 +42,33 @@ class Badges(commands.Cog):
                 value = itr_badge['description'],
                 inline = False
             )
-        await old_msg.edit(embed=embed)
+        await old_msg.edit(embed = embed)
 
 
-    @commands.group(name='badge', aliases=['badges'], invoke_without_command = True)
-    async def badges_group(self, ctx: commands.Context, *, imput = None):
+    @commands.group(name = 'badge', aliases = ['badges'], invoke_without_command = True)
+    async def badges_group(self, ctx: commands.Context, *, input = None):
         if ctx.invoked_subcommand is None:
-            msg = await ctx.send(embed=discord.Embed(description='Подождите...'))
-            if imput:
-                imput = imput.lower().capitalize()
+            msg = await ctx.send(embed = discord.Embed(description = 'Подождите...').set_footer(text = ''))
+            if input:
+                input = input.lower().capitalize()
                 try:
-                    cat = self.badges_client.fetch_category(imput)
+                    cat = self.badges_client.fetch_category(input)
                     await self.send_badges_by_cats(msg, cat)
                 
                 except BadgeBadArgument:
                     try:
-                        badge = self.badges_client.fetch_badge(imput)
+                        badge = self.badges_client.fetch_badge(input)
 
                         embed = discord.Embed(
                             title = f'{badge["char"]} {badge["name"]}',
                             description = badge['description']
                         )
-                        await msg.edit(embed=embed)
+                        await msg.edit(embed = embed)
                         await msg.add_reaction('✅')
 
                         def check(r, u):
                             return str(r.emoji) == '✅' and u == ctx.author
-                        r = await self.bot.wait_for('reaction_add', check=check, timeout=60)
+                        r = await self.bot.wait_for('reaction_add', check = check, timeout = 60)
                         await msg.edit(content = 'Подождите...')
                         
                         badge_id = badge['row'].id
@@ -92,23 +92,23 @@ class Badges(commands.Cog):
                             await ctx.author.edit(nick = f'{ctx.author.display_name}・{badge["char"]}')
                         await msg.edit(content = f'Вы надели бейдж "{badge["name"]}"')
                     except BadgeBadArgument:
-                        return await msg.edit(content = f'Не найдена категория или бейдж с именем {imput}.')
+                        return await msg.edit(content = f'Не найдена категория или бейдж с именем {input}.')
                     except TimeoutError:
-                        return await msg.edit(embed=embed.set_footer('Достигнут лимит времени'))
+                        return await msg.edit(embed = embed.set_footer('Достигнут лимит времени'))
             
             else:
                 await self.send_cats(msg)
 
-    @badges_group.group(name='create', invoke_without_command = True)
+    @badges_group.group(name = 'create', invoke_without_command = True)
     @is_admin()
     async def create_group(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
             await ctx.send('Вы можете создать бейдж или категорию')
 
-    @create_group.command(name='category')
+    @create_group.command(name = 'category')
     async def category_create(self, ctx: commands.Context, name, desc):
         msg = await ctx.send(
-            embed=discord.Embed(
+            embed = discord.Embed(
                 title = 'Подтвердите создание',
             ).add_field(
                 name = 'Название',
@@ -123,25 +123,25 @@ class Badges(commands.Cog):
             return str(r.emoji) in rs and u == ctx.author
         
         for r in rs: await msg.add_reaction(r)
-        react, user = await self.bot.wait_for('reaction_add', check=check)
+        react, user = await self.bot.wait_for('reaction_add', check = check)
         await msg.delete()
 
         if str(react.emoji) == rs[0]:
             row = BadgesManage().create_category(name, desc)
             await ctx.send(
-                embed=discord.Embed(
-                    title='Добавлена категория',
-                    description=f'Название: `{row.name}`\nОписание: `{row.description}`'
+                embed = discord.Embed(
+                    title = 'Добавлена категория',
+                    description = f'Название: `{row.name}`\nОписание: `{row.description}`'
                 )
             )
         else:
             await ctx.send('Добавление отменено')
 
-    @create_group.command(name='badge')
+    @create_group.command(name = 'badge')
     async def badge_create(self, ctx: commands.Context, char, name, desc, cat_name):
         cat = self.badges_client.fetch_category(cat_name)
         msg = await ctx.send(
-            embed=discord.Embed(
+            embed = discord.Embed(
                 title = 'Подтвердите создание',
             ).add_field(
                 name = 'Бейдж',
@@ -162,7 +162,7 @@ class Badges(commands.Cog):
             return str(r.emoji) in rs and u == ctx.author
         
         for r in rs: await msg.add_reaction(r)
-        react, user = await self.bot.wait_for('reaction_add', check=check)
+        react, user = await self.bot.wait_for('reaction_add', check = check)
         await msg.delete()
 
         if str(react.emoji) == rs[0]:
@@ -170,9 +170,9 @@ class Badges(commands.Cog):
 
             
             await ctx.send(
-                embed=discord.Embed(
-                    title='Добавлен бейдж',
-                    description=f'Чар: `{row.char}`\n' \
+                embed = discord.Embed(
+                    title = 'Добавлен бейдж',
+                    description = f'Чар: `{row.char}`\n' \
                                 f'Название: `{row.name}`\n' \
                                 f'Описание: `{row.description}`\n' \
                                 f'Категория: `{row.category.name}`'
@@ -181,7 +181,7 @@ class Badges(commands.Cog):
         else:
             await ctx.send('Добавление отменено')
 
-    @badges_group.command(name='unequip')
+    @badges_group.command(name = 'unequip')
     async def unequip_badge(self, ctx: commands.Context):
         modal = MembersDB(ctx.author.id)
         badges_json = modal.member.json['badges']

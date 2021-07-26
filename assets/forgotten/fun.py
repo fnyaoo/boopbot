@@ -87,7 +87,7 @@ class Fun(commands.Cog):
         guild_ids = [824997091075555419]
     )
     async def topic(self, inter):
-        result = requests.post(url='https://randomall.ru/api/custom/gens/1888')
+        result = requests.post(url = 'https://randomall.ru/api/custom/gens/1888')
         if result.status_code == 200:
             decoded = json.loads(result.content.decode('utf8'))
             topics = decoded['msg'].split('\n\n')[:-1]

@@ -33,11 +33,11 @@ from discord.ext import commands
     # @commands.command()
     # async def roles_resend(self, ctx):
         # await self.message.edit(
-            # embed=discord.Embed(
-                # title='Специальные роли'
+            # embed = discord.Embed(
+                # title = 'Специальные роли'
             # ).add_field(
-                # name='📦',
-                # value='Дает доступ к категории майнкрафт сервера'
+                # name = '📦',
+                # value = 'Дает доступ к категории майнкрафт сервера'
             # )
         # )
         # for key in self.roles:
@@ -88,7 +88,7 @@ class ColorChanger(commands.Cog):
         user_roles = list(filter(lambda x: x.name in self.roles, member.roles))
         if len(user_roles) > 0:
             for role in user_roles:
-                reaction = discord.utils.get(self.message.reactions, emoji=role.name)
+                reaction = discord.utils.get(self.message.reactions, emoji = role.name)
                 if reaction is not None:
                     await reaction.remove(member)
 
@@ -101,7 +101,7 @@ class ColorChanger(commands.Cog):
         if role in member.roles:
             await member.remove_roles(role)
         
-    @commands.command(name='color_resend')
+    @commands.command(name = 'color_resend')
     @commands.is_owner()
     async def embed_resend(self, ctx):
         text =   '<@&833053374600577026> — Кальмар' \
@@ -124,7 +124,7 @@ class ColorChanger(commands.Cog):
                '\n<@&833065024091848724> — Подпарашный ёжик' \
                '\n<@&833053569304494136> — Легендарная пыль' \
                '\n<@&833053487033090058> — Тень'
-        msg = await ctx.send(embed=discord.Embed(description=text))
+        msg = await ctx.send(embed = discord.Embed(description = text))
         for emoji in self.roles:
             await msg.add_reaction(emoji)
 

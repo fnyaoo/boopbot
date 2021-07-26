@@ -8,7 +8,7 @@ class Welcomer(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
     async def get_invites(self):
-        return sorted(await self.guild.invites(), key=lambda inv: inv.code)
+        return sorted(await self.guild.invites(), key = lambda inv: inv.code)
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -31,7 +31,7 @@ class Welcomer(commands.Cog):
         couched = None
         for i in range(len(new_invites)):
             try:
-                if self.invites[i].uses != new_invites[i].uses:
+                if self.invites[i].uses ! =  new_invites[i].uses:
                     couched = new_invites[i]
                     break
             except: pass
@@ -40,24 +40,24 @@ class Welcomer(commands.Cog):
             title = f'Привет, незнакомец!',
             description = f'Здесь ты можешь рассказать о себе, чтобы мы могли понять, ' \
                             f'стоит тебя впускать, или нет.',
-            color=0x6a3eb8
+            color = 0x6a3eb8
         )
         if couched:
             emb.add_field(
-                name='Информация об инвайте',
-                value=f'>>> Создатель инвайта: {couched.inviter.mention}\nКол-во использований: `{couched.uses}`\nКод: `{couched.code}`'
+                name = 'Информация об инвайте',
+                value = f'>>> Создатель инвайта: {couched.inviter.mention}\nКол-во использований: `{couched.uses}`\nКод: `{couched.code}`'
             )
 
         o = self.gate_cat.overwrites.copy()
         o[member] = discord.PermissionOverwrite(
-            read_message_history=True,
-            read_messages=True,
-            send_messages=True
+            read_message_history = True,
+            read_messages = True,
+            send_messages = True
         )
-        gate = await self.gate_cat.create_text_channel(f'врата-{member.id}', overwrites=o)
-        # await gate.send(f'{member.mention}<@&825218095902752768>', delete_after=0.1)
+        gate = await self.gate_cat.create_text_channel(f'врата-{member.id}', overwrites = o)
+        # await gate.send(f'{member.mention}<@&825218095902752768>', delete_after = 0.1)
 
-        menu_message = await gate.send(embed=emb)
+        menu_message = await gate.send(embed = emb)
         result = await GateMenu(menu_message, [490863657740271628, 428483942329614336, 344781718491889664]).reconst(await self.bot.get_context(menu_message))
         if result:
             await member.add_roles(self.bup)

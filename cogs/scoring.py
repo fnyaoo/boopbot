@@ -3,9 +3,9 @@ import random
 import asyncio
 
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 
-from utils.database import MembersDB as modaler, Scoring
+from utils.db import MemberDB, Scoring
 from utils import inflect_by_amount, levels, levels_inverted, get_level, BarCreator, config
 from utils.menus import ScoringPages
 
@@ -36,8 +36,8 @@ class ScoringSystem(commands.Cog):
             new_ct = re.sub('[^a-zA-Zа-яА-ЯёЁ]', '', new_ct)
             return new_ct
 
-        # new metod
-        modal = modaler(message.author.id)
+        # new method
+        member = await MemberDB(message.author.id).fetch()
         handmember = self.handled[message.author.id]
         
         try:
@@ -45,8 +45,8 @@ class ScoringSystem(commands.Cog):
                 limits = config.values['xp']['limits']
                 latest = await self.bot.wait_for(
                     'message', 
-                    check=lambda m: m.author == message.author and m.channel == message.channel, 
-                    timeout=limits['max']
+                    check = lambda m: m.author == message.author and m.channel == message.channel, 
+                    timeout = limits['max']
                 )
                 if (latest.created_at - handmember['l']).total_seconds() < limits['min']:
                     continue
@@ -55,14 +55,15 @@ class ScoringSystem(commands.Cog):
                 else: 
                     handmember['l'] = latest.created_at
                     if len(clean(latest.content)) > 4 and len(self.handled) > 1:
-                        modal.member.score += 1 * config.values['xp']['modifer']
-                        modal.save()
-                        handmember['st'] += 1
-                        if modal.member.score in levels:
+                        score = member.score
+                        score + =  1 * config.values['xp']['modifer']
+                        await member.save()
+                        handmember['st'] + =  1
+                        if score in levels:
                             await message.channel.send(
                                 embed = discord.Embed(
-                                    title=f'🎉 {random.choice(["Конгратс!", "Поздравляем!"])}',
-                                    description=f'{latest.author.mention} получил(а) {levels[modal.member.score]}-й уровень, набрав {inflect_by_amount(modal.member.score, "очко")}',
+                                    title = f'🎉 {random.choice(["Конгратс!", "Поздравляем!"])}',
+                                    description = f'{latest.author.mention} получил(а) {levels[score]}-й уровень, набрав {inflect_by_amount(score, "очко")}',
                                     color = 0xffc83d
                                 )
                             )
@@ -70,9 +71,9 @@ class ScoringSystem(commands.Cog):
         except asyncio.TimeoutError:
             self.handled.pop(message.author.id)
 
-       # old metod
+       # old method
         # xp = len(new_ct)
-        # xp = xp if xp <= 15 else 15
+        # xp = xp if xp < =  15 else 15
         # if xp > 3:
         #     modal = m(message.author)
         #     json: dict = modal.member.json
@@ -80,7 +81,7 @@ class ScoringSystem(commands.Cog):
         #     if score_row:
         #         last = dt.fromisoformat(score_row['last'])
         #         if (message.created_at - last).total_seconds() > 3:
-        #             score_row['total'] += xp
+        #             score_row['total'] + =  xp
         #             score_row['last'] = message.created_at.isoformat()
         #         else: ...
         #     else:
@@ -88,11 +89,11 @@ class ScoringSystem(commands.Cog):
         #     modal.save()
        #
 
-    @commands.group(name='score', invoke_without_command=True)
+    @commands.group(name = 'score', invoke_without_command = True)
     async def _score(self, ctx: commands.Context, target: discord.Member = None):
         target = target or ctx.author
-        modal = modaler(target.id)
-        xp = modal.member.score
+        member = await MemberDB(target.id).fetch()
+        xp = member.score
         current_level = get_level(xp)
 
         bh = BarCreator(levels_inverted[current_level], levels_inverted[current_level+1], xp)
@@ -109,25 +110,31 @@ class ScoringSystem(commands.Cog):
             value = f'```fix\n# {inflect_by_amount(xp, "очко")}\n```'
         ).add_field(
             name = 'До следующего уровня',
-            value = f'```diff\n+ {inflect_by_amount(get_level(xp, next_needed=True)-xp, "очко")}\n```'
+            value = f'```diff\n+ {inflect_by_amount(get_level(xp, next_needed = True)-xp, "очко")}\n```'
         ).add_field(
             name = 'Прогресс',
             value = f'```{bh.bar()}| {current_level+1}lvl ({bh.persent}%)```',
             inline = False
         )
         if ctx.author.id in self.handled:
-            handuser = self.handled[ctx.author.id]
-            embed.set_footer(text=f'l: {handuser["l"].time()}; ts: {handuser["st"]}')
+            handmember = self.handled[ctx.author.id]
+            embed.set_footer(text = f'l: {handmember["l"].time()}; ts: {handmember["st"]}')
         await ctx.send(
             embed = embed
         )
     
     @_score.command(name = 'top')
     async def _top(self, ctx):
-        top_list = self.score_client.query
-        menu = ScoringPages(top_list)
+        menu = ScoringPages(Scoring.query)
         await menu.start(ctx)
 
+    @tasks.loop()
+    async def giveaway(self):
+        pass
+
+    @commands.Cog.listener()
+    async def on_message(self, messsage):
+        pass
 
 def setup(bot):
     bot.add_cog(ScoringSystem(bot))

@@ -14,7 +14,7 @@ class Logs(commands.Cog):
 
     @commands.Cog.listener()
     async def on_log_message_delete(self, message):
-        last_msgs = await message.channel.history(limit=1).flatten()
+        last_msgs = await message.channel.history(limit = 1).flatten()
         embed = discord.Embed(
             title = '🚮 Удалено сообщение',
             timestamp = dt.utcnow(),
@@ -36,7 +36,7 @@ class Logs(commands.Cog):
         ).set_footer(
             text = f'Author: {message.author.id} Channel: {message.channel.id}'
         )
-        await self.channel.send(embed=embed)
+        await self.channel.send(embed = embed)
     
     @commands.Cog.listener() 
     async def on_log_message_edit(self, before, after):
@@ -64,7 +64,7 @@ class Logs(commands.Cog):
         ).set_footer(
             text = f'Message: {before.id} Author: {before.author.id} Channel: {before.channel.id}'
         )
-        await self.channel.send(embed=embed)
+        await self.channel.send(embed = embed)
     
     @commands.Cog.listener()
     async def on_log_voice_state_update(self, member, before, after, color):
@@ -84,7 +84,7 @@ class Logs(commands.Cog):
         ).set_footer(
             text = f'Member: {member.id} Before: {before.channel.id if before.channel else "None"} After: {after.channel.id if after.channel else "None"}'
         )
-        await self.channel.send(embed=embed)
+        await self.channel.send(embed = embed)
 
 
 def setup(bot):

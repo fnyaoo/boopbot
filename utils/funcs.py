@@ -50,7 +50,7 @@ u"\U0001F600-\U0001F64F"  # emoticons
 u"\U0001F300-\U0001F5FF"  # symbols & pictographs
 u"\U0001F680-\U0001F6FF"  # transport & map symbols
 u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
-                "]", flags= re.UNICODE)
+                "]", flags =  re.UNICODE)
 
 layout = dict(zip(map(ord, "qwertyuiop[]asdfghjkl;'zxcvbnm,./`"
                            'QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>?~'
@@ -182,10 +182,8 @@ class _Config:
                 
         foo(self._cached_values, value)
         with open(self.filepath, 'w') as f:
-            json.dump(self._cached_values, f, indent=4)
+            json.dump(self._cached_values, f, indent = 4)
         self.last_fetch = self.now()
-
-
 config = _Config()
 
 def generate_setup(directory: str):

@@ -4,13 +4,13 @@ from discord.ext import commands
 from typing import Dict, List, Tuple
 
 from checks import is_admin
-from utils.database import MembersDB as modaler
+from utils.db import MemberDB
 
 
-class AdminFlags(commands.FlagConverter, prefix='/', delimiter=' '):
-    target: Tuple[discord.Member, ...] = commands.flag(aliases=['member', 'members', 'targets', 'from', 'от'], default=[])
-    limit: int = commands.flag(aliases=['count', 'amount', 'кол-во', 'количество'], default=50)
-    contains: str = commands.flag(aliases=['с', 'вместе', 'есть'], default=None)
+class AdminFlags(commands.FlagConverter, prefix = '/', delimiter = ' '):
+    target: Tuple[discord.Member, ...] = commands.flag(aliases = ['member', 'members', 'targets', 'from', 'от'], default = [])
+    limit: int = commands.flag(aliases = ['count', 'amount', 'кол-во', 'количество'], default = 50)
+    contains: str = commands.flag(aliases = ['с', 'вместе', 'есть'], default = None)
 
 class AdminCommands(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -19,7 +19,7 @@ class AdminCommands(commands.Cog):
         self._qualified_name = 'Админ-команды'
         self.description = 'Солянка команд Егора для всяких приколов'
 
-    @commands.command(name='purge')
+    @commands.command(name = 'purge')
     @is_admin()
     async def _purge(self, ctx: commands.Context, *, flags: AdminFlags):
         def is_target(m):
@@ -32,7 +32,7 @@ class AdminCommands(commands.Cog):
                 condition.append(flags.contains in m.content)
             return all(condition)
 
-        deleted: List[discord.Message] = await ctx.channel.purge(limit=flags.limit+1, check=is_target)
+        deleted: List[discord.Message] = await ctx.channel.purge(limit = flags.limit+1, check = is_target)
 
         text: Dict[discord.Member, int] = {}
         for message in deleted:
@@ -40,18 +40,23 @@ class AdminCommands(commands.Cog):
             text[message.author] = i + 1
 
         await ctx.send(
-            embed=discord.Embed(
+            embed = discord.Embed(
                 title = f'✅ Удалено {inflect_by_amount(len(deleted), "сообщений")} из {flags.limit} последних',
                 color = 0x77b255,
                 description = '\n'.join([f'{author.mention}: {inflect_by_amount(count, "сообщений")}' for author, count in text.items()])
             )
         )
 
-    @commands.command(name='getdata')
+    @commands.command(name = 'getdata')
     @is_admin()
     async def show_json(self, ctx, *, flags: AdminFlags):
         targets = flags.target
-        await ctx.reply('\n'.join([f'```py\n{modaler(target.id).member.json}\n```' for target in targets]))
+        await ctx.reply('\n'.join(
+            [
+                f'```py\n{(await MemberDB(target.id).fetch()).json}\n```'
+                for target in targets
+            ]
+        ))
     
 def setup(bot):
     bot.add_cog(AdminCommands(bot))

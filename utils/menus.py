@@ -23,8 +23,8 @@ class ResponseType:
     filter_of_given = 2
 
 class Confirm(menus.Menu):
-    def __init__(self, message: discord.Message, listen_to_ids: Union[list, set], response_type = ResponseType.one_of_given, timeout=60):
-        super().__init__(message=message, timeout=timeout)
+    def __init__(self, message: discord.Message, listen_to_ids: Union[list, set], response_type = ResponseType.one_of_given, timeout = 60):
+        super().__init__(message = message, timeout = timeout)
         self.message = message
         self.listen_to_ids = set(listen_to_ids)
         self.type = response_type
@@ -38,7 +38,7 @@ class Confirm(menus.Menu):
 
 
     def reaction_check(self, payload):
-        if payload.message_id != self.message.id:
+        if payload.message_id ! =  self.message.id:
             return False
         if payload.user_id not in {self.bot.owner_id, *self.listen_to_ids, *self.bot.owner_ids}:
             return False
@@ -70,17 +70,17 @@ class Confirm(menus.Menu):
             self.stop()
     
     async def reconst(self, ctx):
-        await self.start(ctx, wait=True)
+        await self.start(ctx, wait = True)
         return self.result
 
 class GateMenu(menus.Menu):
     def __init__(self, message, listen_to_ids):
-        super().__init__(message=message, timeout=None)
+        super().__init__(message = message, timeout = None)
         self.result = None
         self.listen_to_ids = listen_to_ids
     
     def reaction_check(self, payload):
-        if payload.message_id != self.message.id:
+        if payload.message_id ! =  self.message.id:
             return False
         if payload.user_id not in {self.bot.owner_id, *self.listen_to_ids, *self.bot.owner_ids}:
             return False
@@ -96,14 +96,14 @@ class GateMenu(menus.Menu):
         self.stop()
     
     async def reconst(self, ctx):
-        await self.start(ctx, wait=True)
+        await self.start(ctx, wait = True)
         return self.result
 
 
 
 class SimpleListSource(menus.ListPageSource):
-    def __init__(self, entries, *, per_page=10):
-        super().__init__(entries, per_page=per_page)
+    def __init__(self, entries, *, per_page = 10):
+        super().__init__(entries, per_page = per_page)
 
     def format_page(self, menu: menus.MenuPages, page):
         if isinstance(page, discord.Embed):
@@ -129,19 +129,19 @@ class SimpleListSource(menus.ListPageSource):
         return f'{page or ""}{" | " if page and element else ""}{element or ""}'
 
 class BasePages(menus.MenuPages):
-    def __init__(self, source, include={'arrows', 'jump'}, *, timeout=600, **kwargs):
-        super().__init__(source, timeout=timeout, **kwargs)
+    def __init__(self, source, include = {'arrows', 'jump'}, *, timeout = 600, **kwargs):
+        super().__init__(source, timeout = timeout, **kwargs)
         self.input_lock = asyncio.Lock()
 
         if not 'standart' in include: 
             self.clear_buttons()
             if 'arrows' in include:
-                self.add_button(menus.Button('◀', self.previous_page, position=menus.First(0)))
-                self.add_button(menus.Button('▶', self.next_page, position=menus.Last(0)))
+                self.add_button(menus.Button('◀', self.previous_page, position = menus.First(0)))
+                self.add_button(menus.Button('▶', self.next_page, position = menus.Last(0)))
         if 'jump' in include:
-            self.add_button(menus.Button('🔢', self.jump_page, position=menus.Last(1)))
-        if timeout >= 600:
-            self.add_button(menus.Button('⏹', self.makes_stop, position=menus.Last(2)))
+            self.add_button(menus.Button('🔢', self.jump_page, position = menus.Last(1)))
+        if timeout > =  600:
+            self.add_button(menus.Button('⏹', self.makes_stop, position = menus.Last(2)))
 
 
     async def finalize(self, timed_out):
@@ -155,7 +155,7 @@ class BasePages(menus.MenuPages):
 
     async def start(self, ctx):
         self._ctx = ctx
-        return await super().start(ctx, wait=True)
+        return await super().start(ctx, wait = True)
 
     @cool_button
     async def next_page(self, payload):
@@ -180,7 +180,7 @@ class BasePages(menus.MenuPages):
             to_delete.append(await self.message.channel.send('На какую страницу ты хочешь прыгнуть?'))
 
             try:
-                msg = await self.bot.wait_for('message', check=check, timeout=self.timeout)
+                msg = await self.bot.wait_for('message', check = check, timeout = self.timeout)
             except asyncio.TimeoutError:
                 to_delete.append(await channel.send('Слишком долгий ответ'))
                 await asyncio.sleep(5)
@@ -208,7 +208,7 @@ class ScoringListSource(SimpleListSource):
         return discord.Embed(
             title = '🏮 Топ по очкам',
             color = 0xcc0f1f,
-            description ='\n'.join([f'{i+1}. <@{model.discord_id}> — {inflect_by_amount(model.score, "очко")}' for i, model in enumerate(page, start=offset)]) 
+            description  = '\n'.join([f'{i+1}. <@{model.discord_id}> — {inflect_by_amount(model.score, "очко")}' for i, model in enumerate(page, start = offset)]) 
         ).set_footer(
             text = self.page_numeration(menu)
         )
