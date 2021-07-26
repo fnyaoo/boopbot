@@ -11,7 +11,7 @@ class RPSType:
     paper = 1
     scissors = 2
 
-class RPSButton(discord.ui.Button['RockPaperScissors']): 
+class RPSButton(discord.ui.Button['RPSView']): 
     def __init__(self, label: str, emoji: str, id: RPSType):
         super().__init__(style = ButtonStyle.blurple, label = label, emoji = emoji, custom_id = str(id))
         self.id = id
@@ -40,7 +40,7 @@ class RPSButton(discord.ui.Button['RockPaperScissors']):
             
         await interaction.response.edit_message(view = view)
 
-class RockPaperScissors(discord.ui.View):
+class RPSView(discord.ui.View):
     def __init__(self, players: set[int]):
         super().__init__(timeout = 30)
         self.players = {p: RPSType.none for p in players}
@@ -61,7 +61,7 @@ class RockPaperScissors(discord.ui.View):
             else:
                 button = self.get_pressed_name(interaction.user.id)
                 await interaction.response.send_message(f'Вы уже выбрали {button}', ephemeral = True)
-        await interaction.response.send_message(f'Извините, но вы не участниик игры', ephemeral = True)
+        await interaction.response.send_message(f'Извините, но вы не участник игры', ephemeral = True)
         return False
     
     def get_pressed_name(self, user):
@@ -89,7 +89,7 @@ class RockPaperScissors(commands.Cog):
             return await ctx.send(f'Недостаточно игроков ({len(result)}, 2 минимум)')
         
         pings = ", ".join([f"<@{m}>" for m in players])
-        game = RockPaperScissors(players)
+        game = RPSView(players)
         game_msg = await ctx.send(f'Камень-ножницы-бумага! Игроки ({pings}), выберите ваш инструмент.', view = game)
         await game.wait()
         results = game.players

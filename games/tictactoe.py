@@ -6,7 +6,7 @@ from discord.ext import commands
 
 class TicTacToeButton(discord.ui.Button['TicTacToe']):
     def __init__(self, x: int, y: int):
-        super().__init__(style = discord.ButtonStyle.secondary, label = '\u200b', group = y)
+        super().__init__(style = discord.ButtonStyle.secondary, label = '\u200b', row = y)
         self.x = x
         self.y = y
 
@@ -137,7 +137,7 @@ class TicTacToe(commands.Cog):
                 return await ctx.reply('Никто не ответил')
         else:
             if member.bot:
-                return await ctx.send('Нельзя игратьс ботом.')
+                return await ctx.send('Нельзя играть с ботом.')
             m = await ctx.send(f'{member.mention}, `{ctx.author.display_name}` хочет сыграть в крестики-нолики')
             result = await Confirm(m, [member.id], timeout = 30).reconst(ctx)
         if result:
