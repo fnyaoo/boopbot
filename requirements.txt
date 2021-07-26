@@ -1,7 +1,6 @@
 git+https://github.com/Rapptz/discord.py
 git+https://github.com/Rapptz/discord-ext-menus
-pymorphy2 =  = 0.9.1
-peewee =  = 3.14.0
+pymorphy2==0.9.1
 Pillow
 jishaku
 tortoise-orm[asyncpg]
