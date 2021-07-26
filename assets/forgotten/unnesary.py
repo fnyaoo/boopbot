@@ -15,10 +15,10 @@ def average_color(bytelike):
     for x in range(width):
         for y in range(height):
             r, g, b, a = img.getpixel((x,y))
-            r_total + =  r
-            g_total + =  g
-            b_total + =  b
-            count + =  1
+            r_total += r
+            g_total += g
+            b_total += b
+            count += 1
     
     r,g,b = (r_total//count, g_total//count, b_total//count)
     hex_str = f'{r:02x}{g:02x}{b:02x}'

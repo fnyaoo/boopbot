@@ -88,12 +88,12 @@ class Mafia(commands.Cog):
             emoji = str(react.emoji)
             
             if emoji == ce.mafia_change(True):
-                mafia_count + =  1
+                mafia_count += 1
             elif emoji == ce.mafia_change(False):
-                mafia_count - =  1
+                mafia_count -= 1
             elif emoji == ce.mafia("murder"):
                 is_murder = not is_murder
-                mafia_count + =  -1 if is_murder else 1
+                mafia_count += -1 if is_murder else 1
             elif emoji == ce.mafia("butterfly"):
                 is_butterfly = not is_butterfly
             elif emoji == ce.mafia("doctor"):
@@ -183,7 +183,7 @@ class Mafia(commands.Cog):
                     elif options[option].value == 'status':
                         members_list = ''
                         for member in self.lobby['members']:
-                            members_list + =  ce.void() + member.mention + '\n'
+                            members_list += ce.void() + member.mention + '\n'
                         
                         embed = discord.Embed(
                             title = 'Статус игры',
@@ -209,7 +209,7 @@ class Mafia(commands.Cog):
                             return await inter.reply('Лобби уже запущено', ephemeral = True)
 
                         elif options[option].value == 'next_turn':
-                            self.lobby['turn'] + =  1
+                            self.lobby['turn'] += 1
                             if not self.lobby['is_started']:
                                 self.lobby['is_started'] = True
                                 await self.game_start(inter)

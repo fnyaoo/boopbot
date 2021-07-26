@@ -56,9 +56,9 @@ class ScoringSystem(commands.Cog):
                     handmember['l'] = latest.created_at
                     if len(clean(latest.content)) > 4 and len(self.handled) > 1:
                         score = member.score
-                        score + =  1 * config.values['xp']['modifer']
+                        score += 1 * config.values['xp']['modifer']
                         await member.save()
-                        handmember['st'] + =  1
+                        handmember['st'] += 1
                         if score in levels:
                             await message.channel.send(
                                 embed = discord.Embed(
@@ -81,7 +81,7 @@ class ScoringSystem(commands.Cog):
         #     if score_row:
         #         last = dt.fromisoformat(score_row['last'])
         #         if (message.created_at - last).total_seconds() > 3:
-        #             score_row['total'] + =  xp
+        #             score_row['total'] += xp
         #             score_row['last'] = message.created_at.isoformat()
         #         else: ...
         #     else:
