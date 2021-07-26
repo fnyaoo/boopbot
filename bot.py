@@ -18,6 +18,7 @@ initial_extensions = (
 
     'games.rockpaperscissors',
     'games.tictactoe',
+    'jishaku'
 )
 
 def _prefix_callable(bot, msg):
@@ -36,7 +37,7 @@ class BoopBot(commands.Bot):
             try:
                 self.load_extension(extension)
             except Exception as e:
-                print(f'Failed to load extension {extension}.', file = sys.stderr)
+                print(f'Ошибка при загрузке {extension}.', file = sys.stderr)
                 traceback.print_exc()
             else:
                 loaded.append(extension)
@@ -48,9 +49,9 @@ class BoopBot(commands.Bot):
         if os.environ['IS_HEROKU'] == '1':
             await self.get_channel(827504142406385664).send(
                 embed = discord.Embed(
-                    description = 'Бот загружен', 
+                    description = 'Бот запущен', 
                     timestamp = self._program_start
                 ).set_footer(
-                    text = 'Префикс: \'!\''
+                    text = 'Префикс: !'
                 )
             )
