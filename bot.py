@@ -31,13 +31,16 @@ class BoopBot(commands.Bot):
             strip_after_prefix = True,
             intents = discord.Intents.all()
         )
-
+        loaded = []
         for extension in initial_extensions:
             try:
                 self.load_extension(extension)
             except Exception as e:
                 print(f'Failed to load extension {extension}.', file = sys.stderr)
                 traceback.print_exc()
+            else:
+                loaded.append(extension)
+        print('Загружено: ' + ', '.join(loaded))
     
     async def on_ready(self):
         print('Бот загружен')

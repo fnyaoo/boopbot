@@ -4,7 +4,6 @@ from discord.ext import commands
 from typing import Dict, List, Tuple
 
 from checks import is_admin
-from utils.db import MemberDB
 
 
 class AdminFlags(commands.FlagConverter, prefix = '/', delimiter = ' '):
