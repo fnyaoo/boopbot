@@ -2,7 +2,7 @@
     "prefix": "!",
     "voice_private": {
         "category_id": 836670303266144306,
-        "basechannel_id": 836670304540950548
+        "base_channel_id": 836670304540950548
     },
     "xp": {
         "limits": {

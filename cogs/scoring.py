@@ -5,7 +5,7 @@ import asyncio
 import discord
 from discord.ext import commands, tasks
 
-from utils.db import MemberDB, Scoring
+from utils.db import Members
 from utils import inflect_by_amount, levels, levels_inverted, get_level, BarCreator, config
 from utils.menus import ScoringPages
 
@@ -16,7 +16,6 @@ class ScoringSystem(commands.Cog):
         self.bot = bot
         self.counter = 0
         self.handled = {}
-        self.score_client = Scoring
 
         self._qualified_name = 'Активность в чате'
         self.description = 'Скоринг-система и команды взаимодействия с ней.'
@@ -37,7 +36,7 @@ class ScoringSystem(commands.Cog):
             return new_ct
 
         # new method
-        member = await MemberDB(message.author.id).fetch()
+        member = await Members.get_or_create(id=str(message.author.id))
         handmember = self.handled[message.author.id]
         
         try:
@@ -92,7 +91,7 @@ class ScoringSystem(commands.Cog):
     @commands.group(name = 'score', invoke_without_command = True)
     async def _score(self, ctx: commands.Context, target: discord.Member = None):
         target = target or ctx.author
-        member = await MemberDB(target.id).fetch()
+        member = await Members.get_or_create(id=str(target.id))
         xp = member.score
         current_level = get_level(xp)
 
@@ -125,7 +124,11 @@ class ScoringSystem(commands.Cog):
     
     @_score.command(name = 'top')
     async def _top(self, ctx):
-        menu = ScoringPages(Scoring.query)
+        query = (Members
+            .exclude(score = 0)
+            .order_by('-score')
+        )
+        menu = ScoringPages(await query)
         await menu.start(ctx)
 
     @tasks.loop()
