@@ -168,7 +168,7 @@ class Mafia(commands.Cog):
             return await inter.reply('Слишком много аргументов', ephemeral = True)
         
         for option in options:
-            if self.lobby ! =  None:
+            if self.lobby != None:
                 if option == 'lobby':
                     if options[option].value == 'join':
                         if not self.lobby['is_started']:
@@ -215,7 +215,7 @@ class Mafia(commands.Cog):
                                 await self.game_start(inter)
                             else:
                                 def check():
-                                    peace = len(filter(lambda x: x ! =  'mafia' and x ! =  'murder', self.lobby['members'].values()))
+                                    peace = len(filter(lambda x: x != 'mafia' and x != 'murder', self.lobby['members'].values()))
                                     alls = len(self.lobby['members'])
                                     murders = alls - peace
                                     return peace > murders

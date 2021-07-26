@@ -73,7 +73,7 @@ class ScoringSystem(commands.Cog):
 
        # old method
         # xp = len(new_ct)
-        # xp = xp if xp < =  15 else 15
+        # xp = xp if xp <= 15 else 15
         # if xp > 3:
         #     modal = m(message.author)
         #     json: dict = modal.member.json

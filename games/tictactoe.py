@@ -110,7 +110,7 @@ class TTTView(discord.ui.View):
             return self.X
 
         # If we're here, we need to check if a tie was made
-        if all(i ! =  0 for row in self.board for i in row):
+        if all(i != 0 for row in self.board for i in row):
             return self.Tie
 
         return None
@@ -125,7 +125,7 @@ class TicTacToe(commands.Cog):
             msg = await ctx.send(f'`{ctx.author.display_name}` хочет сыграть в крестики-нолики.\nЧтобы принять вызов, нажмите ✅')
             await msg.add_reaction('✅')
             def check(r: discord.Reaction, u):
-                return u ! =  ctx.author and \
+                return u != ctx.author and \
                     r.message == msg and \
                     not u.bot
             try:

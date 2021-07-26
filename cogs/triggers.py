@@ -51,10 +51,10 @@ class Triggers(commands.Cog):
     
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
-        if str(reaction.emoji) ! =  '🔁':
+        if str(reaction.emoji) != '🔁':
             return
         msg = reaction.message
-        if msg.author ! =  user:
+        if msg.author != user:
             return
 
         await self.send_webhooked(msg, f'{msg.content.translate(layout)}\n> **Исправлена раскладка клавиатуры**', 'Исправление раскладки')

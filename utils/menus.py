@@ -38,7 +38,7 @@ class Confirm(menus.Menu):
 
 
     def reaction_check(self, payload):
-        if payload.message_id ! =  self.message.id:
+        if payload.message_id != self.message.id:
             return False
         if payload.user_id not in {self.bot.owner_id, *self.listen_to_ids, *self.bot.owner_ids}:
             return False
@@ -80,7 +80,7 @@ class GateMenu(menus.Menu):
         self.listen_to_ids = listen_to_ids
     
     def reaction_check(self, payload):
-        if payload.message_id ! =  self.message.id:
+        if payload.message_id != self.message.id:
             return False
         if payload.user_id not in {self.bot.owner_id, *self.listen_to_ids, *self.bot.owner_ids}:
             return False
@@ -140,7 +140,7 @@ class BasePages(menus.MenuPages):
                 self.add_button(menus.Button('▶', self.next_page, position = menus.Last(0)))
         if 'jump' in include:
             self.add_button(menus.Button('🔢', self.jump_page, position = menus.Last(1)))
-        if timeout > =  600:
+        if timeout >= 600:
             self.add_button(menus.Button('⏹', self.makes_stop, position = menus.Last(2)))
 
 

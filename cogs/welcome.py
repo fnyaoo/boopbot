@@ -31,7 +31,7 @@ class Welcomer(commands.Cog):
         couched = None
         for i in range(len(new_invites)):
             try:
-                if self.invites[i].uses ! =  new_invites[i].uses:
+                if self.invites[i].uses != new_invites[i].uses:
                     couched = new_invites[i]
                     break
             except: pass

@@ -188,7 +188,7 @@ class _Scoring:
     def __init__(self):
         self._query = (Members
             .select()
-            .where(Members.score ! =  0)
+            .where(Members.score != 0)
             .order_by(Members.score)
         )
     

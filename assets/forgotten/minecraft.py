@@ -15,7 +15,7 @@ class ServerStatus(commands.Cog):
     async def online_checker(self):
         peoples = self.server.status().players.online
         new_name = f'Онлайн: {peoples}'
-        if self.last_lookup ! =  peoples and self.category.name ! =  new_name:
+        if self.last_lookup != peoples and self.category.name != new_name:
             await self.category.edit(name = new_name)
             self.last_lookup = peoples
         
