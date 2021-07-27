@@ -2,48 +2,6 @@ import discord
 from discord.ext import commands
 
 
-# class RolesGiver(commands.Cog):
-    # def __init__(self, bot):
-        # self.bot = bot
-
-    # @commands.Cog.listener()
-    # async def on_ready(self):
-        # self.channel = self.bot.get_channel(827470485604401192)
-
-        # self.roles = {
-            # '📦': 838681138770870292
-        # }
-        # for key in self.roles:
-            # self.roles[key] = self.channel.guild.get_role(self.roles[key])
-
-        # self.message = await self.channel.fetch_message(838696931005825024)
-    
-    # @commands.Cog.listener()
-    # async def on_raw_reaction_add(self, payload):
-        # if str(payload.emoji) in self.roles:
-            # try: await payload.member.add_roles(self.roles[str(payload.emoji)])
-            # except: pass
-    
-    # @commands.Cog.listener()
-    # async def on_raw_reaction_remove(self, payload):
-        # if str(payload.emoji) in self.roles:
-            # try: await payload.member.remove_roles(self.roles[str(payload.emoji)])
-            # except: pass
-    
-    # @commands.command()
-    # async def roles_resend(self, ctx):
-        # await self.message.edit(
-            # embed = discord.Embed(
-                # title = 'Специальные роли'
-            # ).add_field(
-                # name = '📦',
-                # value = 'Дает доступ к категории майнкрафт сервера'
-            # )
-        # )
-        # for key in self.roles:
-            # await self.message.add_reaction(key)
-        # await ctx.add_reaction('✅')
-
 class ColorChanger(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
