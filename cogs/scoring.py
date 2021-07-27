@@ -36,7 +36,8 @@ class ScoringSystem(commands.Cog):
             return new_ct
 
         # new method
-        member = await Members.get_or_create(id=str(message.author.id))
+        member = await Members.get_or_create(discord_id=str(message.author.id))
+        member = member[0]
         handmember = self.handled[message.author.id]
         
         try:
@@ -91,7 +92,8 @@ class ScoringSystem(commands.Cog):
     @commands.group(name = 'score', invoke_without_command = True)
     async def _score(self, ctx: commands.Context, target: discord.Member = None):
         target = target or ctx.author
-        member = await Members.get_or_create(id=str(target.id))
+        member = await Members.get_or_create(discord_id=str(target.id))
+        member = member[0]
         xp = member.score
         current_level = get_level(xp)
 

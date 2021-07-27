@@ -18,7 +18,8 @@ initial_extensions = (
 
     'games.rockpaperscissors',
     'games.tictactoe',
-    'jishaku'
+    'jishaku',
+    'events'
 )
 
 def _prefix_callable(bot, msg):
