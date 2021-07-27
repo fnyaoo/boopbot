@@ -10,19 +10,17 @@ from .models import *
 #     async def fetch(self) -> Members_Super_New:
 #         return Members_Super_New.get_or_create(discord_id = self.member_id)[0]
 
-async def _main(db_url):
+async def main(db_url):
     await Tortoise.init(
         db_url = db_url,
         modules = {'models': ['utils.db']}
     )
-    m = (await models.Members.filter(discord_id = '765197502181277727'))[0]
-    print(m.score)
 
-def main():
+def _main():
     if environ.get('DATABASE_URL') is None:
         from dotenv import load_dotenv
         load_dotenv()
-    run_async(_main(environ.get('DATABASE_URL')))
+    run_async(main(environ.get('DATABASE_URL')))
 
 if __name__ == '__main__':
-    main()
+    _main()
