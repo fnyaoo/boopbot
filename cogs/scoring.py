@@ -28,7 +28,7 @@ class ScoringSystem(commands.Cog):
             message.author.id in self.handled or \
             (not message.channel.id in [824997091725017090]): 
             return
-        self.handled[message.author.id] = {'st': 0, 'l': message.created_at}
+        self.handled[message.author.id] = {'streak': 0, 'last': message.created_at}
 
         def clean(content: str):
             new_ct = re.sub('<(?:@|#|:\S+:|@&)\d{18}>', '', content)
@@ -48,25 +48,28 @@ class ScoringSystem(commands.Cog):
                     check = lambda m: m.author == message.author and m.channel == message.channel, 
                     timeout = limits['max']
                 )
-                if (latest.created_at - handmember['l']).total_seconds() < limits['min']:
+                if (latest.created_at - handmember['last']).total_seconds() < limits['min']:
                     continue
                 if latest.content.startswith(('l!', 't!', '!', '-')):
                     continue
-                else: 
-                    handmember['l'] = latest.created_at
-                    if len(clean(latest.content)) > 4 and len(self.handled) > 1:
-                        score = member.score
-                        score += 1 * config.values['xp']['modifer']
-                        await member.save()
-                        handmember['st'] += 1
-                        if score in levels:
-                            await message.channel.send(
-                                embed = discord.Embed(
-                                    title = f'🎉 {random.choice(["Конгратс!", "Поздравляем!"])}',
-                                    description = f'{latest.author.mention} получил(а) {levels[score]}-й уровень, набрав {inflect_by_amount(score, "очко")}',
-                                    color = 0xffc83d
-                                )
+                handmember['last'] = latest.created_at
+                if len(clean(latest.content)) > 4 and len(self.handled) > 1:
+                    member.score += round(1 * config.values['xp']['modifer'])
+                    await member.save()
+                    handmember['streak'] += 1
+
+                    if member.score in levels:
+                        await message.reply(
+                            embed = discord.Embed(
+                                title = f'🎉 {random.choice(["Конгратс!", "Поздравляем!"])}',
+                                description = (
+                                    f'{latest.author.mention} получил(а) '
+                                    f'{levels[member.score]}-й уровень, '
+                                    f'набрав {inflect_by_amount(member.score, "очко")}',
+                                ),
+                                color = 0xffc83d
                             )
+                        )
 
         except asyncio.TimeoutError:
             self.handled.pop(message.author.id)

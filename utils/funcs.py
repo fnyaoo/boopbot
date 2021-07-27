@@ -110,19 +110,14 @@ levels_inverted = { 0: 0,
 }
 
 def get_level(xp: int, next_needed: bool = False) -> int:
-    if xp == 0:
-        return xp
-    for amount in levels:
-        if amount < xp:
+    for mark, level in levels.items():
+        if mark < xp:
             continue
         else:
             if next_needed:
-                values = list(levels.values())
-                keys = list(levels.keys())
-                
-                return keys[values.index(levels[amount])]
+                return levels_inverted[level+1]
             else:
-                return levels[amount]-1
+                return levels[mark]
     if next_needed:
         return 0
     else:
