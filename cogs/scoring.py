@@ -5,8 +5,8 @@ import asyncio
 import discord
 from discord.ext import commands, tasks
 
-from utils.db import Members
-from utils import inflect_by_amount, levels, levels_inverted, get_level, BarCreator, config
+from utils.db import Members, F
+from utils import inflect_by_amount, levels, levels_inverted, get_level, BarCreator
 from utils.menus import ScoringPages
 
 
@@ -36,28 +36,28 @@ class ScoringSystem(commands.Cog):
             return new_ct
 
         # new method
-        member = await Members.get_or_create(discord_id=str(message.author.id))
-        member = member[0]
         handmember = self.handled[message.author.id]
         
         try:
             while True:
-                limits = config.values['xp']['limits']
                 latest = await self.bot.wait_for(
                     'message', 
                     check = lambda m: m.author == message.author and m.channel == message.channel, 
-                    timeout = limits['max']
+                    timeout = 75
                 )
-                if (latest.created_at - handmember['last']).total_seconds() < limits['min']:
+
+                if (latest.created_at - handmember['last']).total_seconds() < 45:
                     continue
                 if latest.content.startswith(('l!', 't!', '!', '-')):
                     continue
                 handmember['last'] = latest.created_at
-                if len(clean(latest.content)) > 4 and len(self.handled) > 1:
-                    member.score += round(1 * config.values['xp']['modifer'])
-                    await member.save()
-                    handmember['streak'] += 1
+                member, _ = await Members.get_or_create(discord_id = str(message.author.id))
 
+                if len(clean(latest.content)) > 4 and len(self.handled) > 1:
+                    await Members.filter(discord_id=str(message.author.id)).update(score = F('score') + 1)
+                    handmember['streak'] += 1
+                    
+                    await member.refresh_from_db(('score'))
                     if member.score in levels:
                         await message.reply(
                             embed = discord.Embed(

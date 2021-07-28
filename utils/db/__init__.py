@@ -1,14 +1,10 @@
 from os import environ
 
 from tortoise import Tortoise, run_async
+from tortoise.expressions import F
 from .models import *
 
-# class MemberDB:
-#     def __init__(self, member_id) -> None:
-#         self.member_id = str(member_id)
-    
-#     async def fetch(self) -> Members_Super_New:
-#         return Members_Super_New.get_or_create(discord_id = self.member_id)[0]
+__all__ = ('main', 'F')
 
 async def main(db_url):
     await Tortoise.init(
