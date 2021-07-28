@@ -39,19 +39,17 @@ class ScoringSystem(commands.Cog):
         handmember = self.handled[message.author.id]
         
         try:
-            print(f'{message.author.id} enter the loop')
             while True:
                 latest = await self.bot.wait_for(
                     'message', 
                     check = lambda m: m.author == message.author and m.channel == message.channel, 
-                    timeout = 75
+                    timeout = 90
                 )
 
-                if (latest.created_at - handmember['last']).total_seconds() < 45:
+                if (latest.created_at - handmember['last']).total_seconds() < 30:
                     continue
                 if latest.content.startswith(('l!', 't!', '!', '-')):
                     continue
-                print(f'{message.author.id} new good message')
 
                 handmember['last'] = latest.created_at
                 member, _ = await Members.get_or_create(discord_id = str(message.author.id))
@@ -60,7 +58,6 @@ class ScoringSystem(commands.Cog):
                     await Members.filter(discord_id=str(message.author.id)).update(score = F('score') + 1)
                     handmember['streak'] += 1
                     
-                    print(f'{message.author.id} added score')
                     await member.refresh_from_db(('score',))
                     if member.score in levels:
                         await message.reply(
@@ -76,7 +73,6 @@ class ScoringSystem(commands.Cog):
                         )
 
         except asyncio.TimeoutError:
-            print(f'{message.author.id} exit the loop')
             self.handled.pop(message.author.id)
 
        # old method
