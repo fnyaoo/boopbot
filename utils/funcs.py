@@ -95,8 +95,20 @@ levels = { 0: 0,
     1650: 25, 1900: 26, 2200: 27,
     2500: 28, 2850: 29, 3250: 30
 }
+levels_ranges = {
+    1: range(0, 9), 2: range(10, 29), 3: range(30, 44), 
+    4: range(45, 59), 5: range(60, 79), 6: range(80, 99),
+    7: range(100, 119), 8: range(120, 149), 9: range(150, 179), 
+    10: range(180, 209), 11: range(210, 249), 12: range(250, 299), 
+    13: range(300, 359), 14: range(360, 419), 15: range(420, 499), 
+    16: range(500, 579), 17: range(580, 649), 18: range(650, 749), 
+    19: range(750, 874), 20: range(875, 999), 21: range(1000, 1149), 
+    22: range(1150, 1299), 23: range(1300, 1499), 24: range(1500, 1649), 
+    25: range(1650, 1899), 26: range(1900, 2199), 27: range(2200, 2499), 
+    28: range(2500, 2849), 29: range(2850, 3249), 30: range(3250, 5000)
+}
 
-levels_inverted = { 0: 0,
+levels_inverted = {
     1: 10, 2: 20, 3: 30, 
     4: 45, 5: 60, 6: 80, 
     7: 100, 8: 120, 9: 150, 
@@ -109,20 +121,17 @@ levels_inverted = { 0: 0,
     28: 2500, 29: 2850, 30: 3250
 }
 
-def get_level(xp: int, next_needed: bool = False) -> int:
-    for mark, level in levels.items():
-        if mark < xp:
-            continue
-        else:
-            if next_needed:
-                return levels_inverted[level+1]
-            else:
-                return levels[mark]
-    if next_needed:
-        return 0
-    else:
-        return levels[3250]
+def get_level(xp: int) -> int:
+    for mark, level in levels_ranges.items():
+        if xp in level:
+            return mark
+    return 31
 
+def get_next(xp: int) -> int:
+    for mark, level in levels_ranges.items():
+        if xp in level:
+            return levels_ranges[mark+1][0]
+    return 0
 
 class BarCreator:
     def __init__(self, min, max, current):

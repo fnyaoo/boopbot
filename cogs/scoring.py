@@ -5,8 +5,8 @@ import asyncio
 import discord
 from discord.ext import commands, tasks
 
+from utils import inflect_by_amount, levels, levels_inverted, get_level, get_next, BarCreator
 from utils.db import Members, F
-from utils import inflect_by_amount, levels, levels_inverted, get_level, BarCreator
 from utils.menus import ScoringPages
 
 
@@ -39,6 +39,7 @@ class ScoringSystem(commands.Cog):
         handmember = self.handled[message.author.id]
         
         try:
+            print(f'{message.author.id} enter the loop')
             while True:
                 latest = await self.bot.wait_for(
                     'message', 
@@ -50,6 +51,8 @@ class ScoringSystem(commands.Cog):
                     continue
                 if latest.content.startswith(('l!', 't!', '!', '-')):
                     continue
+                print(f'{message.author.id} new good message')
+
                 handmember['last'] = latest.created_at
                 member, _ = await Members.get_or_create(discord_id = str(message.author.id))
 
@@ -57,11 +60,12 @@ class ScoringSystem(commands.Cog):
                     await Members.filter(discord_id=str(message.author.id)).update(score = F('score') + 1)
                     handmember['streak'] += 1
                     
+                    print(f'{message.author.id} added score')
                     await member.refresh_from_db(('score'))
                     if member.score in levels:
                         await message.reply(
                             embed = discord.Embed(
-                                title = f'🎉 {random.choice(["Конгратс!", "Поздравляем!"])}',
+                                title = f'🎉 {random.choice(("Конгратс!", "Поздравляем!"))}',
                                 description = (
                                     f'{latest.author.mention} получил(а) '
                                     f'{levels[member.score]}-й уровень, '
@@ -72,6 +76,7 @@ class ScoringSystem(commands.Cog):
                         )
 
         except asyncio.TimeoutError:
+            print(f'{message.author.id} exit the loop')
             self.handled.pop(message.author.id)
 
        # old method
@@ -99,6 +104,7 @@ class ScoringSystem(commands.Cog):
         member = member[0]
         xp = member.score
         current_level = get_level(xp)
+        current_next = get_next(xp)
 
         bh = BarCreator(levels_inverted[current_level], levels_inverted[current_level+1], xp)
 
@@ -114,7 +120,7 @@ class ScoringSystem(commands.Cog):
             value = f'```fix\n# {inflect_by_amount(xp, "очко")}\n```'
         ).add_field(
             name = 'До следующего уровня',
-            value = f'```diff\n+ {inflect_by_amount(get_level(xp, next_needed = True)-xp, "очко")}\n```'
+            value = f'```diff\n+ {inflect_by_amount(current_next-xp, "очко")}\n```'
         ).add_field(
             name = 'Прогресс',
             value = f'```{bh.bar()}| {current_level+1}lvl ({bh.persent}%)```',
@@ -135,14 +141,6 @@ class ScoringSystem(commands.Cog):
         )
         menu = ScoringPages(await query)
         await menu.start(ctx)
-
-    @tasks.loop()
-    async def giveaway(self):
-        pass
-
-    @commands.Cog.listener()
-    async def on_message(self, messsage):
-        pass
 
 def setup(bot):
     bot.add_cog(ScoringSystem(bot))
