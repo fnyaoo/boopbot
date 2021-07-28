@@ -66,7 +66,7 @@ class ScoringSystem(commands.Cog):
                                 description = (
                                     f'{latest.author.mention} получил(а) '
                                     f'{levels[member.score]}-й уровень, '
-                                    f'набрав {inflect_by_amount(member.score, "очко")}',
+                                    f'набрав {inflect_by_amount(member.score, "очко")}'
                                 ),
                                 color = 0xffc83d
                             )

@@ -96,16 +96,16 @@ levels = { 0: 0,
     2500: 28, 2850: 29, 3250: 30
 }
 levels_ranges = {
-    1: range(0, 9), 2: range(10, 29), 3: range(30, 44), 
-    4: range(45, 59), 5: range(60, 79), 6: range(80, 99),
-    7: range(100, 119), 8: range(120, 149), 9: range(150, 179), 
-    10: range(180, 209), 11: range(210, 249), 12: range(250, 299), 
-    13: range(300, 359), 14: range(360, 419), 15: range(420, 499), 
-    16: range(500, 579), 17: range(580, 649), 18: range(650, 749), 
-    19: range(750, 874), 20: range(875, 999), 21: range(1000, 1149), 
-    22: range(1150, 1299), 23: range(1300, 1499), 24: range(1500, 1649), 
-    25: range(1650, 1899), 26: range(1900, 2199), 27: range(2200, 2499), 
-    28: range(2500, 2849), 29: range(2850, 3249), 30: range(3250, 5000)
+    1: range(0, 10), 2: range(10, 30), 3: range(30, 45), 
+    4: range(45, 60), 5: range(60, 80), 6: range(80, 100),
+    7: range(100, 120), 8: range(120, 150), 9: range(150, 180), 
+    10: range(180, 210), 11: range(210, 250), 12: range(250, 300), 
+    13: range(300, 360), 14: range(360, 420), 15: range(420, 500), 
+    16: range(500, 580), 17: range(580, 650), 18: range(650, 750), 
+    19: range(750, 875), 20: range(875, 1000), 21: range(1000, 1150), 
+    22: range(1150, 1300), 23: range(1300, 1500), 24: range(1500, 1650), 
+    25: range(1650, 1900), 26: range(1900, 2200), 27: range(2200, 2500), 
+    28: range(2500, 2850), 29: range(2850, 3250), 30: range(3250, 5000)
 }
 
 levels_inverted = {
@@ -130,7 +130,7 @@ def get_level(xp: int) -> int:
 def get_next(xp: int) -> int:
     for mark, level in levels_ranges.items():
         if xp in level:
-            return levels_ranges[mark+1][0]
+            return levels_ranges[mark][-1]+1
     return 0
 
 class BarCreator:
