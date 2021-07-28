@@ -147,7 +147,7 @@ class BarCreator:
         return int(round(self.raw_persent, 2) * 100)
 
     def bar(self, bar_length = 25, chars = ['█', ' ']):
-        if self.max == self.min:
+        if self.min in (self.max, self.current):
             return chars[0] * bar_length
         fill_length = int(self.raw_persent * bar_length)
 
