@@ -61,7 +61,7 @@ class ScoringSystem(commands.Cog):
                     handmember['streak'] += 1
                     
                     print(f'{message.author.id} added score')
-                    await member.refresh_from_db(('score'))
+                    await member.refresh_from_db(('score',))
                     if member.score in levels:
                         await message.reply(
                             embed = discord.Embed(
