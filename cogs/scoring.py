@@ -128,7 +128,7 @@ class ScoringSystem(commands.Cog):
         )
         if ctx.author.id in self.handled:
             handmember = self.handled[ctx.author.id]
-            embed.set_footer(text = f'l: {handmember["l"].time()}; ts: {handmember["st"]}')
+            embed.set_footer(text = f'l: {handmember["last"].time()}; ts: {handmember["streak"]}')
         await ctx.send(
             embed = embed
         )
