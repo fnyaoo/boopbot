@@ -43,10 +43,10 @@ class ScoringSystem(commands.Cog):
                 latest = await self.bot.wait_for(
                     'message', 
                     check = lambda m: m.author == message.author and m.channel == message.channel, 
-                    timeout = 90
+                    timeout = 80
                 )
 
-                if (latest.created_at - handmember['last']).total_seconds() < 30:
+                if (latest.created_at - handmember['last']).total_seconds() < 40:
                     continue
                 if latest.content.startswith(('l!', 't!', '!', '-')):
                     continue
@@ -60,7 +60,7 @@ class ScoringSystem(commands.Cog):
                     
                     await member.refresh_from_db(('score',))
                     if member.score in levels:
-                        await message.reply(
+                        await latest.reply(
                             embed = discord.Embed(
                                 title = f'🎉 {random.choice(("Конгратс!", "Поздравляем!"))}',
                                 description = (
