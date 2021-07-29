@@ -9,6 +9,7 @@ if environ['IS_HEROKU'] == '0':
     from dotenv import load_dotenv
     load_dotenv()
 
+
 bot = BoopBot()
 bot._program_start = datetime.utcnow()
 

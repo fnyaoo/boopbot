@@ -1,6 +1,7 @@
 import os
 import sys
 import traceback
+from datetime import datetime
 
 import discord
 from discord.ext import commands
@@ -33,6 +34,7 @@ class BoopBot(commands.Bot):
             strip_after_prefix = True,
             intents = discord.Intents.all()
         )
+        self._program_start = datetime.utcnow()
         loaded = []
         for extension in initial_extensions:
             try:
@@ -50,8 +52,7 @@ class BoopBot(commands.Bot):
         if os.environ['IS_HEROKU'] == '1':
             await self.get_channel(827504142406385664).send(
                 embed = discord.Embed(
-                    description = 'Бот запущен', 
-                    timestamp = self._program_start
+                    description = f'Бот запущен {discord.utils.format_dt(self._program_start, "R")}'
                 ).set_footer(
                     text = 'Префикс: !'
                 )

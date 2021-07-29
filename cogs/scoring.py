@@ -15,7 +15,7 @@ class ScoringSystem(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.counter = 0
-        self.handled = {}
+        bot.in_active = {}
 
         self._qualified_name = 'Активность в чате'
         self.description = 'Скоринг-система и команды взаимодействия с ней.'
@@ -25,10 +25,10 @@ class ScoringSystem(commands.Cog):
     async def on_message(self, message):
         if  message.content.startswith(('l!', 't!', '!', '-')) or \
             message.author.bot or \
-            message.author.id in self.handled or \
+            message.author.id in self.bot.in_active or \
             (not message.channel.id in [824997091725017090]): 
             return
-        self.handled[message.author.id] = {'streak': 0, 'last': message.created_at}
+        self.bot.in_active[message.author.id] = {'streak': 0, 'last': message.created_at}
 
         def clean(content: str):
             new_ct = re.sub('<(?:@|#|:\S+:|@&)\d{18}>', '', content)
@@ -36,7 +36,7 @@ class ScoringSystem(commands.Cog):
             return new_ct
 
         # new method
-        handmember = self.handled[message.author.id]
+        handmember = self.bot.in_active[message.author.id]
         
         try:
             while True:
@@ -54,7 +54,7 @@ class ScoringSystem(commands.Cog):
                 handmember['last'] = latest.created_at
                 member, _ = await Members.get_or_create(discord_id = str(message.author.id))
 
-                if len(clean(latest.content)) > 4 and len(self.handled) > 1:
+                if len(clean(latest.content)) > 4 and len(self.bot.in_active) > 1:
                     await Members.filter(discord_id=str(message.author.id)).update(score = F('score') + 1)
                     handmember['streak'] += 1
                     
@@ -73,7 +73,7 @@ class ScoringSystem(commands.Cog):
                         )
 
         except asyncio.TimeoutError:
-            self.handled.pop(message.author.id)
+            self.bot.in_active.pop(message.author.id)
 
        # old method
         # xp = len(new_ct)
@@ -122,12 +122,10 @@ class ScoringSystem(commands.Cog):
             value = f'```{bh.bar()}| {current_level+1}lvl ({bh.persent}%)```',
             inline = False
         )
-        if ctx.author.id in self.handled:
-            handmember = self.handled[ctx.author.id]
-            embed.set_footer(text = f'l: {handmember["last"].time()}; ts: {handmember["streak"]}')
-        await ctx.send(
-            embed = embed
-        )
+        if ctx.author.id in self.bot.in_active:
+            handmember = self.bot.in_active[ctx.author.id]
+            embed.set_footer(text = f'last: {handmember["last"].time()}\nstreak: {handmember["streak"]}')
+        await ctx.send(embed = embed)
     
     @_score.command(name = 'top')
     async def _top(self, ctx):
