@@ -35,7 +35,7 @@ class BoopBot(commands.Bot):
             strip_after_prefix = True,
             intents = discord.Intents.all()
         )
-        self._program_start = datetime.now()
+        self._program_start = discord.utils.utcnow()
         loaded = []
         for extension in initial_extensions:
             try:
