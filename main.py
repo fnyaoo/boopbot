@@ -11,7 +11,6 @@ if environ['IS_HEROKU'] == '0':
 
 
 bot = BoopBot()
-bot._program_start = datetime.utcnow()
 
 if __name__ == '__main__':
     db_url = environ.get('DATABASE_URL')
