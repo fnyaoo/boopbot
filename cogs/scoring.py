@@ -154,17 +154,18 @@ class ScoringSystem(commands.Cog):
         ).add_field(
             name = 'До следующего уровня',
             value = f'```diff\n+ {inflect_by_amount(current_next-xp, "очко")}\n```'
-        ).add_field(
-            name = 'Прогресс',
-            value = f'```{bh.bar()}| {current_level+1}lvl ({bh.persent}%)```',
-            inline = False
         )
         if log is not None:
             embed.add_field(
                 name = 'За сегодня',
-                value = f'```{inflect_by_amount(log.score, "очко")}```',
+                value = f'```asciidocs\n= {inflect_by_amount(log.score, "очко")}```',
                 inline = False
             )
+        embed.add_field(
+            name = 'Прогресс',
+            value = f'```{bh.bar()}| {current_level+1}lvl ({bh.persent}%)```',
+            inline = False
+        )
 
         if ctx.author.id in self.bot.in_active:
             handmember = self.bot.in_active[ctx.author.id]
@@ -194,7 +195,7 @@ class ScoringSystem(commands.Cog):
         msg: discord.Message = await channel.send(
             ''.join([f'<@{(await score.member).discord_id}>' for score in top])
         )
-        embed = self.dayend_embed(score_sum, len(all_rows), top)
+        embed = await self.dayend_embed(score_sum, len(all_rows), top)
         await msg.edit(content = '', embed = embed)
 
     @tasks.loop(hours=24)
