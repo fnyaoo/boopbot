@@ -214,8 +214,8 @@ class ScoringSystem(commands.Cog):
         await ScoreDailyLog.all().delete()
 
     @scorelog_schedule.before_loop
-    async def before_my_task(self):
-        hour, minute = 13, 00
+    async def scheduler(self):
+        hour, minute = 23, 59
 
         now = datetime.now()
         future = datetime(now.year, now.month, now.day, hour, minute)
