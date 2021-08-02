@@ -47,6 +47,7 @@ class ScoringSystem(commands.Cog):
                 )
             except KeyError as e:
                 print(repr(e))
+        return embed
 
     @commands.Cog.listener()
     async def on_ready(self):
