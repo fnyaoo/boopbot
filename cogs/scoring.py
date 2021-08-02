@@ -159,7 +159,7 @@ class ScoringSystem(commands.Cog):
         if log is not None:
             embed.add_field(
                 name = 'За сегодня',
-                value = f'```asciidocs\n= {inflect_by_amount(log.score, "очко")}```',
+                value = f'```asciidoc\n= {inflect_by_amount(log.score, "очко")}```',
                 inline = False
             )
         embed.add_field(
