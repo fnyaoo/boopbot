@@ -206,7 +206,7 @@ class ScoringSystem(commands.Cog):
         score_sum = sum(row.score for row in all_rows)
         top = all_rows[:3]
 
-        msg: discord.Message = await self.bot.get_channel(827043604681719819).send(
+        msg: discord.Message = await self.bot.get_channel(824997091725017090).send(
             ''.join([f'<@{(await score.member).discord_id}>' for score in top])
         )
         embed = self.dayend_embed(score_sum, len(all_rows), top)
