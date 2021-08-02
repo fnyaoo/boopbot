@@ -1,14 +1,12 @@
 from bot import BoopBot
 from os import environ
-from datetime import datetime
-
 from utils import db
+
 
 environ['IS_HEROKU'] = "1" if 'HEROKU_APP_ID' in environ else "0"
 if environ['IS_HEROKU'] == '0':
     from dotenv import load_dotenv
     load_dotenv()
-
 
 bot = BoopBot()
 

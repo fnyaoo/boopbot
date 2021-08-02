@@ -193,12 +193,20 @@ class _Config:
         self.last_fetch = self.now()
 config = _Config()
 
-def generate_setup(directory: str):
-    def setup(bot: commands.Bot):
-        extensions = (name[:-3] for name in os.listdir(directory) if name.endswith('.py') and name not in ('__init__.py'))
-        for ext in extensions:
-            try:
-                bot.load_extension(f'{directory}.{ext}')
-            except commands.ExtensionError as e:
-                print(f'WARNING: {directory}.{ext} raised {e.name}: {e}')
-    return setup
+
+goodnight_messages = ('Спокойной ночи, Бупостан!', 
+                    'Хорошо постарались сегодня..', 
+                    'Чтоб вам кошмарики не снились', 
+                    'Сегодня был замечательный день',
+                    'Сладких снов, бупы',
+                    'И пусть наутро все задуманное удастся',
+                    'Утро вечера мудренее...',
+                    'Пусть тебе приснится нефильтрованное пиво',
+                    'И пусть серенький волчок не кусает за бочок',
+                    'Отбой, семья! Всем – мирной ночи и радостного пробуждения!',
+                    'Баю, баюшки, баю – да спи ты уже',
+                    'Запомни свой сон, завтра расскажешь',
+                    'Сон – всему голова, отключай голову',
+                    'Губит людей не пиво, губит людей бессонница',
+                    'Ночью надо или сексом заниматься, или спать – третьего не дано',
+                    'СПКНЧ!')
