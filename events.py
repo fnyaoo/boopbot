@@ -65,7 +65,7 @@ def setup(bot: commands.Bot):
     async def role_update(before: discord.Member, after: discord.Member):
         if before.roles == after.roles:
             return
-        if (set(before.roles).symmetric_difference(set(after.roles))[0]).id in config['delimiter']['roles'].values():
+        if list(set(before.roles).symmetric_difference(set(after.roles)))[0].id in config['delimiter']['roles'].values():
             return
 
         bot.dispatch('role_update', after)
