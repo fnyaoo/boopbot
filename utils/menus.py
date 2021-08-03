@@ -209,7 +209,7 @@ class ScoringListSource(SimpleListSource):
     def format_page(self, menu, page):
         offset = self.per_page*menu.current_page
         return discord.Embed(
-            title = '🏮 Топ по очкам',
+            title = f'🏮 Топ по очкам за {"день" if self.daily else "всё время"}',
             color = 0xcc0f1f,
             description  = '\n'.join([f'{i+1}. <@{model.member.discord_id if self.is_daily else model.discord_id}> — {inflect_by_amount(model.score, "очко")}' for i, model in enumerate(page, start = offset)]) 
         ).set_footer(
