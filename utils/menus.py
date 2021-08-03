@@ -129,7 +129,7 @@ class SimpleListSource(menus.ListPageSource):
         return f'{page or ""}{" | " if page and element else ""}{element or ""}'
 
 class BasePages(menus.MenuPages):
-    def __init__(self, source, include = {'arrows', 'jump'}, *, timeout = 600, **kwargs):
+    def __init__(self, source, include = {'arrows', 'jump'}, timeout = 600, **kwargs):
         super().__init__(source, timeout = timeout, **kwargs)
         self.input_lock = asyncio.Lock()
 
@@ -203,8 +203,8 @@ class LyashaPages(BasePages):
 
 
 class ScoringListSource(SimpleListSource):
-    def __init__(self, entries, **kwargs):
-        self.is_daily = kwargs.pop('is_daily', False)
+    def __init__(self, entries, is_daily = False, **kwargs):
+        self.is_daily = is_daily
         super().__init__(entries, **kwargs)
     def format_page(self, menu, page):
         offset = self.per_page*menu.current_page
@@ -217,6 +217,6 @@ class ScoringListSource(SimpleListSource):
         )
 
 class ScoringPages(BasePages):
-    def __init__(self, entries, **kwargs):
-        source = ScoringListSource(entries, **kwargs)
+    def __init__(self, entries, is_daily = False, **kwargs):
+        source = ScoringListSource(entries, is_daily, **kwargs)
         super().__init__(source, **kwargs)
