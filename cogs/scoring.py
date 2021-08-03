@@ -159,7 +159,7 @@ class ScoringSystem(commands.Cog):
         if log is not None:
             embed.add_field(
                 name = 'За сегодня',
-                value = f'```asciidoc\n= {inflect_by_amount(log.score, "очко")}```',
+                value = f'```asciidoc\n= {inflect_by_amount(log.score, "очко")}\n```',
                 inline = False
             )
         embed.add_field(
@@ -176,6 +176,15 @@ class ScoringSystem(commands.Cog):
     @_score.command(name = 'top')
     async def _top(self, ctx):
         query = (Members
+            .exclude(score = 0)
+            .order_by('-score')
+        )
+        menu = ScoringPages(await query)
+        await menu.start(ctx)
+    
+    @_score.command(name = 'dailytop')
+    async def _dailytop(self, ctx):
+        query = (ScoreDailyLog
             .exclude(score = 0)
             .order_by('-score')
         )
