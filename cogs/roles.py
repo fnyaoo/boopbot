@@ -90,8 +90,8 @@ class RolesChange(commands.Cog):
     @commands.Cog.listener()
     async def on_role_update(self, member: discord.Member):
         roles = set(member.roles)
-        groups = {}
-        delimiters = {}
+        groups = set()
+        delimiters = set()
         for role in roles:
             for key, val in config['delimiter']['categories'].items():
                 if role.id in val:
