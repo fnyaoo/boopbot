@@ -204,8 +204,8 @@ class LyashaPages(BasePages):
 
 class ScoringListSource(SimpleListSource):
     def __init__(self, entries, **kwargs):
+        self.is_daily = kwargs.pop('is_daily', False)
         super().__init__(entries, **kwargs)
-        self.is_daily = kwargs.get('is_daily', False)
     def format_page(self, menu, page):
         offset = self.per_page*menu.current_page
         return discord.Embed(
