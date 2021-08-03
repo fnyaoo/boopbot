@@ -187,8 +187,9 @@ class ScoringSystem(commands.Cog):
         query = (ScoreDailyLog
             .exclude(score = 0)
             .order_by('-score')
+            .prefetch_related('member')
         )
-        menu = ScoringPages(await query)
+        menu = ScoringPages(await query, is_daily = True)
         await menu.start(ctx)
     
     @_score.command(name = 'end_day')

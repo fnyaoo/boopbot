@@ -11,7 +11,6 @@ async def main(db_url):
         db_url = db_url,
         modules = {'models': ['utils.db']}
     )
-    await Tortoise.generate_schemas()
 
 def _main():
     if environ.get('DATABASE_URL') is None:
