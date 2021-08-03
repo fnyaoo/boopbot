@@ -1,13 +1,14 @@
 import discord
 from discord.ext import commands
 
+from utils import config
 
-class ColorChanger(commands.Cog):
+class RolesChange(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-        self._qualified_name = 'Цвета'
-        self.description = 'Команды, связванные с разработкой цветов'
+        self._qualified_name = 'Роли'
+        self.description = 'Команды, связванные с разработкой ролей'
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -62,7 +63,7 @@ class ColorChanger(commands.Cog):
     @commands.command(name = 'color_resend')
     @commands.is_owner()
     async def embed_resend(self, ctx):
-        text =   '<@&833053374600577026> — Кальмар' \
+        text   = '<@&833053374600577026> — Кальмар' \
                '\n<@&833053402405142538> — Коралловый' \
                '\n<@&833053432234901505> — Красный фонарь' \
                '\n<@&833235083355095082> — Бежевый' \
@@ -85,7 +86,27 @@ class ColorChanger(commands.Cog):
         msg = await ctx.send(embed = discord.Embed(description = text))
         for emoji in self.roles:
             await msg.add_reaction(emoji)
+    
+    @commands.Cog.listener()
+    async def on_role_update(self, member: discord.Member):
+        roles = set(member.roles)
+        groups = {}
+        delimiters = {}
+        for role in roles:
+            for key, val in config['delimiter']['categories'].items():
+                if role.id in val:
+                    groups.add(key)
+                    break
+            for key, val in config['delimiter']['roles'].items():
+                if role.id == val:
+                    delimiters.add(key)
+                    break
+        remove = set(delimiters) - set(groups)
+        add = set(groups) - set(delimiters)
+
+        await member.remove_roles(*[member.guild.get_role(config['delimiter']['roles'][name]) for name in remove])
+        await member.add_roles(*[member.guild.get_role(config['delimiter']['roles'][name]) for name in add])
 
 
 def setup(bot):
-    bot.add_cog(ColorChanger(bot))
+    bot.add_cog(RolesChange(bot))

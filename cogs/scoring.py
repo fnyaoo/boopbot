@@ -237,7 +237,6 @@ class ScoringSystem(commands.Cog):
 
         delta = (future - now).seconds
         await asyncio.sleep(delta)
-
     
 
 def setup(bot):

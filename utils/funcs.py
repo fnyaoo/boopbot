@@ -163,7 +163,7 @@ class _Config:
         self._update_after = 300
         self.fetch()
     
-    def __getitem__(self, key):
+    def __getitem__(self, key) -> dict:
         return self.values[key] 
     
     def fetch(self):

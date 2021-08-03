@@ -58,9 +58,3 @@ class BoopBot(commands.Bot):
                     text = 'Префикс: !'
                 )
             )
-    
-    async def on_error(self, event_method: str, *args, **kwargs):
-        o = (await self.application_info()).owner
-        await o.send(f'Ignoring exception in {event_method}')
-        await o.send(f'```py\n{traceback.format_exc(limit=1990)}\n```')
-        await o.send(f'{args = }\n{kwargs = }')
