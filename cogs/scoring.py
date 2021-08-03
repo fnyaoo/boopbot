@@ -211,13 +211,13 @@ class ScoringSystem(commands.Cog):
         msg: discord.Message = await self.bot.get_channel(824997091725017090).send(
             ''.join([f'<@{(await score.member).discord_id}>' for score in top])
         )
-        embed = self.dayend_embed(score_sum, len(all_rows), top)
+        embed = await self.dayend_embed(score_sum, len(all_rows), top)
         await msg.edit(content = '', embed = embed)
         await ScoreDailyLog.all().delete()
 
     @scorelog_schedule.before_loop
     async def scheduler(self):
-        hour, minute = 23, 59
+        hour, minute = 0, 1
 
         now = datetime.now()
         future = datetime(now.year, now.month, now.day, hour, minute)
