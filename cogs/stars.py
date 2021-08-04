@@ -3,6 +3,7 @@ import asyncio
 
 import discord
 from discord.ext import commands
+from tortoise.exceptions import IntegrityError
 
 from utils.db import StarEntries, Members
 # just copy-pasted whole code from https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/stars.py
@@ -209,17 +210,20 @@ class Starboard(commands.Cog):
             raise StarError('\N{NO ENTRY SIGN} На это сообщение нельзя поставить звезду.')
         print('star2')
         
-        entry = (await StarEntries.get_or_create(
-            defaults = {
-                'message_id': str(message_id),
-                'channel_id': str(channel.id),
-                'author_id': str(msg.author.id),
-                'starrers': [
-                    (await Members.get_or_create(discord_id = str(starrer_id)))[0]
-                ]
-            },
-            message_id = str(message_id)
-        ))[0]
+        defaults = {
+            'message_id': str(message_id),
+            'channel_id': str(channel.id),
+            'author_id': str(msg.author.id),
+            'starrers': [
+                (await Members.get_or_create(discord_id = str(starrer_id)))[0]
+            ],
+            'message_id': str(message_id)
+        }
+        try:
+            entry = await StarEntries.create(**defaults)
+        except IntegrityError:
+            entry = await StarEntries.get(defaults['message_id'])
+        
         count = await (entry.starrers
             .all()
             .count()
