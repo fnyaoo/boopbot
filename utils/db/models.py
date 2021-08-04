@@ -5,26 +5,34 @@ from tortoise.fields import (
     IntField,
     ForeignKeyField,
     ForeignKeyRelation,
-    ReverseRelation
+    ReverseRelation,
+    ManyToManyField,
+    ManyToManyRelation
 )
 
 
 __all__ = (
     'Members',
-    'ScoreDailyLog'
+    'ScoreDailyLog',
+    'StarEntries'
 )
 
 class Members(Model):
     discord_id = CharField(18, pk = True)
-    score      = IntField(default = 0)
+    score = IntField(default = 0)
+
     score_log: ReverseRelation['ScoreDailyLog']
+    stared_messages: ReverseRelation['StarEntries']
+    starrer_on: ManyToManyRelation['StarEntries']
 
     def __str__(self) -> str:
         discord_id = self.discord_id
         return f'Member({discord_id=})'
+    __repr__ = __str__
 
     class Meta:
         table = 'members'
+
 
 class ScoreDailyLog(Model):
     id = IntField(pk = True)
@@ -39,3 +47,14 @@ class ScoreDailyLog(Model):
 
     class Meta:
         table = 'scorelog'
+
+
+class StarEntries(Model):
+    message_id = CharField(18, pk = True)
+    bot_message_id = CharField(18, null = True)
+    channel_id = CharField(18)
+    author = ForeignKeyField('models.Members', 'stared_messages')
+    starrers = ManyToManyField('models.Members', 'given_stars', related_name = 'starrer_on')
+    
+    class Meta:
+        table = 'starentry'
