@@ -224,7 +224,7 @@ class Starboard(commands.Cog):
             .all()
             .count()
         )
-        if count < 3:
+        if count < 2:
             return
 
         # at this point, we either edit the message or we create a message
@@ -297,7 +297,7 @@ class Starboard(commands.Cog):
         if bot_message is None:
             return
 
-        if count < 3:
+        if count < 2:
             self._about_to_be_deleted.add(bot_message_id)
             if count:
                 # update the bot_message_id to be NULL in the table since we're deleting it
