@@ -106,34 +106,33 @@ class Starboard(commands.Cog):
     async def reaction_action(self, fmt, payload):
         if str(payload.emoji) != '⭐':
             return
-
+        print('here1')
         guild = self.bot.get_guild(payload.guild_id)
         if guild is None:
             return
-
+        print('here2')
         channel = guild.get_channel_or_thread(payload.channel_id)
         if not isinstance(channel, (discord.Thread, discord.TextChannel)):
             return
 
         method = getattr(self, f'{fmt}_message')
-
+        print('here3')
         user = payload.member or (await guild.fetch_member(payload.user_id))
         if user is None or user.bot:
             return
-
+        print('here4')
         try:
             await method(channel, payload.message_id, payload.user_id)
         except:
             pass
+        print('here5')
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
-        print('star ' + str(payload))
         await self.reaction_action('star', payload)
 
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload):
-        print('unstar ' + str(payload))
         await self.reaction_action('unstar', payload)
     
     @commands.Cog.listener()
@@ -181,6 +180,7 @@ class Starboard(commands.Cog):
     
     async def star_message(self, channel, message_id, starrer_id):
         async with self._lock:
+            print('here star start')
             await self._star_message(channel, message_id, starrer_id)
 
     async def _star_message(self, channel, message_id, starrer_id):
@@ -195,7 +195,7 @@ class Starboard(commands.Cog):
                 raise StarError('Не удалось найти первоначальный канал.')
 
             return await self.star_message(ch, record.message_id, starrer_id)
-
+        print('star1')
         msg = await self.get_message(channel, message_id)
 
         if msg is None:
@@ -207,7 +207,7 @@ class Starboard(commands.Cog):
         empty_message = len(msg.content) == 0 and len(msg.attachments) == 0
         if empty_message or msg.type not in (discord.MessageType.default, discord.MessageType.reply):
             raise StarError('\N{NO ENTRY SIGN} На это сообщение нельзя поставить звезду.')
-
+        print('star2')
         
         entry = (await StarEntries.get_or_create(
             defaults = {
@@ -226,6 +226,7 @@ class Starboard(commands.Cog):
         )
         if count < 2:
             return
+        print('star3')
 
         # at this point, we either edit the message or we create a message
         # with our star info
@@ -238,10 +239,12 @@ class Starboard(commands.Cog):
         bot_message_id = record.bot_message_id
 
         if bot_message_id is None:
+            print('star4')
             new_msg = await self.starboard.send(content, embed=embed)
             record.bot_message_id = new_msg.id
             await record.save()
         else:
+            print('star5')
             new_msg = await self.get_message(self.starboard, bot_message_id)
             if new_msg is None:
                 # deleted? might as well purge the data
@@ -250,10 +253,12 @@ class Starboard(commands.Cog):
                     .delete()
                 )
             else:
+                print('star6')
                 await new_msg.edit(content=content, embed=embed)
 
     async def unstar_message(self, channel, message_id, starrer_id):
         async with self._lock:
+            print('here unstar start')
             await self._unstar_message(channel, message_id, starrer_id)
     
     async def _unstar_message(self, channel, message_id, starrer_id):
@@ -270,7 +275,7 @@ class Starboard(commands.Cog):
                 raise StarError('Не удалось найти первоначальный канал.')
 
             return await self.unstar_message(ch, record.message_id, starrer_id)
-
+        print('unstar1')
         record = await StarEntries.get_or_none(message_id = message_id)
         if record is None:
             raise StarError('\N{NO ENTRY SIGN} Этого сообщения ещё нет на доске.')
@@ -292,10 +297,12 @@ class Starboard(commands.Cog):
 
         if bot_message_id is None:
             return
+        print('unstar2')
 
         bot_message = await self.get_message(self.starboard, bot_message_id)
         if bot_message is None:
             return
+        print('unstar3')
 
         if count < 2:
             self._about_to_be_deleted.add(bot_message_id)
@@ -303,12 +310,14 @@ class Starboard(commands.Cog):
                 # update the bot_message_id to be NULL in the table since we're deleting it
                 record.bot_message_id = None
                 await record.save()
+            print('unstar4')
 
             await bot_message.delete()
         else:
             msg = await self.get_message(channel, message_id)
             if msg is None:
                 raise StarError('\N{BLACK QUESTION MARK ORNAMENT} Это сообщение не найдено.')
+            print('unstar5')
 
             content, embed = self.get_emoji_message(msg, count)
             await bot_message.edit(content=content, embed=embed)
