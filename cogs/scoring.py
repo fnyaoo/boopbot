@@ -227,7 +227,7 @@ class ScoringSystem(commands.Cog):
 
     @scorelog_schedule.before_loop
     async def scheduler(self):
-        hour, minute = 7, 30
+        hour, minute = 23, 59
 
         now = datetime.now()
         future = datetime(now.year, now.month, now.day, hour, minute)
