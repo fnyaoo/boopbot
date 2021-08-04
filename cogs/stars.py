@@ -21,6 +21,7 @@ class Starboard(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         self.starboard: discord.TextChannel = self.bot.get_channel(865617516269142026)
+        print(self.starboard)
     
     @staticmethod
     def star_emoji(stars):
@@ -114,7 +115,7 @@ class Starboard(commands.Cog):
         if not isinstance(channel, (discord.Thread, discord.TextChannel)):
             return
 
-        method = getattr(self, f'_{fmt}_message')
+        method = getattr(self, f'{fmt}_message')
 
         user = payload.member or (await self.bot.get_or_fetch_member(guild, payload.user_id))
         if user is None or user.bot:
@@ -179,11 +180,11 @@ class Starboard(commands.Cog):
         if msg is not None:
             await msg.delete()
     
-    async def _star_message(self, channel, message_id, starrer_id):
-        async with self._lock:
-            await self.star_message(channel, message_id, starrer_id)
-
     async def star_message(self, channel, message_id, starrer_id):
+        async with self._lock:
+            await self._star_message(channel, message_id, starrer_id)
+
+    async def _star_message(self, channel, message_id, starrer_id):
         if channel.id == self.starboard.id:
             record = await (StarEntries
                 .filter(bot_message_id = message_id)
@@ -252,11 +253,11 @@ class Starboard(commands.Cog):
             else:
                 await new_msg.edit(content=content, embed=embed)
 
-    async def _unstar_message(self, channel, message_id, starrer_id):
-        async with self._lock:
-            await self.unstar_message(channel, message_id, starrer_id)
-    
     async def unstar_message(self, channel, message_id, starrer_id):
+        async with self._lock:
+            await self._unstar_message(channel, message_id, starrer_id)
+    
+    async def _unstar_message(self, channel, message_id, starrer_id):
         if channel.id == self.starboard.id:
             record = await (StarEntries
                 .filter(bot_message_id = message_id)
