@@ -59,3 +59,9 @@ class BoopBot(commands.Bot):
                     text = 'Префикс: !'
                 )
             )
+    
+    async def get_or_fetch_member(self, guild: discord.Guild, member_id):
+        member = guild.get_member(member_id)
+        if member is None:
+            member = await guild.fetch_member(member_id)
+        return member
