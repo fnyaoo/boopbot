@@ -128,12 +128,12 @@ class Starboard(commands.Cog):
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
-        print('star ' + payload)
+        print('star ' + str(payload))
         await self.reaction_action('star', payload)
 
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload):
-        print('unstar ' + payload)
+        print('unstar ' + str(payload))
         await self.reaction_action('unstar', payload)
     
     @commands.Cog.listener()
