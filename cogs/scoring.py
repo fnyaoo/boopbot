@@ -227,7 +227,7 @@ class ScoringSystem(commands.Cog):
 
     @scorelog_schedule.before_loop
     async def scheduler(self):
-        hour, minute = 0, 1
+        hour, minute = 7, 30
 
         now = datetime.now()
         future = datetime(now.year, now.month, now.day, hour, minute)
@@ -235,8 +235,10 @@ class ScoringSystem(commands.Cog):
         if now.hour >= hour and now.minute > minute:
             future += timedelta(days=1)
 
-        delta = (future - now).seconds
-        await asyncio.sleep(delta)
+        delta = (future - now)
+        print(f'sleeping {delta}')
+
+        await asyncio.sleep(delta.seconds)
     
 
 def setup(bot):
