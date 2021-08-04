@@ -104,7 +104,7 @@ class Starboard(commands.Cog):
                 return None
 
     async def reaction_action(self, fmt, payload):
-        if str(payload.emoji) != '\N{WHITE MEDIUM STAR}':
+        if str(payload.emoji) != '⭐':
             return
 
         guild = self.bot.get_guild(payload.guild_id)
@@ -117,21 +117,23 @@ class Starboard(commands.Cog):
 
         method = getattr(self, f'{fmt}_message')
 
-        user = payload.member or (await self.bot.get_or_fetch_member(guild, payload.user_id))
+        user = payload.member or (await guild.fetch_member(payload.user_id))
         if user is None or user.bot:
             return
 
         try:
-            await method(channel, payload.message_id, payload.user_id, verify=True)
+            await method(channel, payload.message_id, payload.user_id)
         except:
             pass
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
+        print('star ' + payload)
         await self.reaction_action('star', payload)
 
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload):
+        print('unstar ' + payload)
         await self.reaction_action('unstar', payload)
     
     @commands.Cog.listener()
@@ -139,8 +141,6 @@ class Starboard(commands.Cog):
         if payload.message_id in self._about_to_be_deleted:
             self._about_to_be_deleted.discard(payload.message_id)
             return
-
-        
         if self.starboard.id != payload.channel_id:
             return
 
@@ -154,7 +154,6 @@ class Starboard(commands.Cog):
         if payload.message_ids <= self._about_to_be_deleted:
             self._about_to_be_deleted.difference_update(payload.message_ids)
             return
-
         if self.starboard.id != payload.channel_id:
             return
 
