@@ -200,53 +200,48 @@ class Starboard(commands.Cog):
         msg = await self.get_message(channel, message_id)
 
         if msg is None:
-            raise StarError('\N{BLACK QUESTION MARK ORNAMENT} Не удалось найти сообщение.')
+            raise StarError('Не удалось найти сообщение.')
 
         if msg.author.id == starrer_id:
-            raise StarError('\N{NO ENTRY SIGN} Вы не можете поставить звезду на свое сообщение.')
+            raise StarError('Вы не можете поставить звезду на свое сообщение.')
 
         empty_message = len(msg.content) == 0 and len(msg.attachments) == 0
         if empty_message or msg.type not in (discord.MessageType.default, discord.MessageType.reply):
-            raise StarError('\N{NO ENTRY SIGN} На это сообщение нельзя поставить звезду.')
+            raise StarError('На это сообщение нельзя поставить звезду.')
         print('star2')
-        
+
         defaults = {
             'message_id': str(message_id),
             'channel_id': str(channel.id),
-            'author_id': str(msg.author.id),
-            'starrers': [
-                (await Members.get_or_create(discord_id = str(starrer_id)))[0]
-            ],
-            'message_id': str(message_id)
+            'author_id': str(msg.author.id)
         }
         try:
+            print('MAYBE HEEEERE?')
             entry = await StarEntries.create(**defaults)
+            print('no error')
         except IntegrityError:
-            entry = await StarEntries.get(defaults['message_id'])
+            print('error occurred, get')
+            entry = await StarEntries.get(message_id = defaults['message_id'])
+        await entry.starrers.add((await Members.get_or_create(discord_id = str(starrer_id)))[0])
         
-        count = await (entry.starrers
-            .all()
-            .count()
-        )
+        count = len(await entry.starrers.all())
+        print(count)
         if count < 2:
             return
-        print('star3')
 
         # at this point, we either edit the message or we create a message
         # with our star info
         content, embed = self.get_emoji_message(msg, count)
+        print('star3')
 
         # get the message ID to edit:
-        record = (await (StarEntries
-            .filter(message_id = message_id)
-        ))[0]
-        bot_message_id = record.bot_message_id
+        bot_message_id = entry.bot_message_id
 
         if bot_message_id is None:
             print('star4')
             new_msg = await self.starboard.send(content, embed=embed)
-            record.bot_message_id = new_msg.id
-            await record.save()
+            entry.bot_message_id = new_msg.id
+            await entry.save()
         else:
             print('star5')
             new_msg = await self.get_message(self.starboard, bot_message_id)
@@ -283,7 +278,7 @@ class Starboard(commands.Cog):
         record = await StarEntries.get_or_none(message_id = message_id)
         if record is None:
             raise StarError('\N{NO ENTRY SIGN} Этого сообщения ещё нет на доске.')
-        record.fetch_related('starrers')
+        await record.fetch_related('starrers')
         starrer = await Members.get_or_create(discord_id = starrer_id)
         if starrer not in record.starrers:
             raise StarError('\N{NO ENTRY SIGN} Вы ещё на поставили звезду на это сообщение.')

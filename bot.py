@@ -13,7 +13,7 @@ initial_extensions = (
     'cogs.logs',
     'cogs.roles',
     'cogs.scoring',
-    'cogs.stars',
+    # 'cogs.stars',
     'cogs.status',
     'cogs.triggers',
     'cogs.welcome',
