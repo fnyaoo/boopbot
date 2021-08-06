@@ -54,7 +54,13 @@ class StarEntries(Model):
     bot_message_id = CharField(18, null = True)
     channel_id = CharField(18)
     author = ForeignKeyField('models.Members', 'stared_messages')
-    starrers = ManyToManyField('models.Members', 'given_stars', related_name = 'starrer_on')
+    starrers = ManyToManyField('models.Members', 'givenstars', related_name = 'starrer_on')
     
+    def __str__(self) -> str:
+        message_id = self.message_id
+        bot_message_id = self.bot_message_id
+        return f'ScoreDailyLog({message_id=}, {bot_message_id=})'
+    __repr__ = __str__
+
     class Meta:
         table = 'starentry'

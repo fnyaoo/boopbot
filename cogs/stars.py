@@ -22,10 +22,8 @@ class Starboard(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         self.starboard: discord.TextChannel = self.bot.get_channel(865617516269142026)
-        print(self.starboard)
-    
-    @staticmethod
-    def star_emoji(stars):
+
+    def star_emoji(self, stars):
         if 5 > stars >= 0:
             return '\N{WHITE MEDIUM STAR}'
         elif 10 > stars >= 5:
@@ -35,8 +33,7 @@ class Starboard(commands.Cog):
         else:
             return '\N{SPARKLES}'
 
-    @staticmethod
-    def star_gradient_color(stars):
+    def star_gradient_color(self, stars):
         p = stars / 13
         if p > 1.0:
             p = 1.0
@@ -45,7 +42,7 @@ class Starboard(commands.Cog):
         green = int((194 * p) + (253 * (1 - p)))
         blue = int((12 * p) + (247 * (1 - p)))
         return (red << 16) + (green << 8) + blue
-    
+
     def is_url_spoiler(self, text, url):
         spoilers = self.spoilers.findall(text)
         for spoiler in spoilers:
@@ -61,13 +58,11 @@ class Starboard(commands.Cog):
         else:
             content = f'{emoji} {message.channel.mention} ID: {message.id}'
 
-
         embed = discord.Embed(description=message.content)
         if message.embeds:
             data = message.embeds[0]
             if data.type == 'image' and not self.is_url_spoiler(message.content, data.url):
                 embed.set_image(url=data.url)
-
         if message.attachments:
             file = message.attachments[0]
             spoiler = file.is_spoiler()
@@ -85,7 +80,7 @@ class Starboard(commands.Cog):
         embed.add_field(name='Оригинал', value=f'[Прыг]({message.jump_url})', inline=False)
         embed.set_author(name=message.author.display_name, icon_url=message.author.avatar.url)
         embed.timestamp = message.created_at
-        embed.colour = self.star_gradient_colour(stars)
+        embed.colour = self.star_gradient_color(stars)
         return content, embed
 
     async def get_message(self, channel, message_id) -> discord.Message:
@@ -107,26 +102,22 @@ class Starboard(commands.Cog):
     async def reaction_action(self, fmt, payload):
         if str(payload.emoji) != '⭐':
             return
-        print('here1')
+
         guild = self.bot.get_guild(payload.guild_id)
         if guild is None:
             return
-        print('here2')
+
         channel = guild.get_channel_or_thread(payload.channel_id)
         if not isinstance(channel, (discord.Thread, discord.TextChannel)):
             return
 
         method = getattr(self, f'{fmt}_message')
-        print('here3')
+
         user = payload.member or (await guild.fetch_member(payload.user_id))
         if user is None or user.bot:
             return
-        print('here4')
-        try:
-            await method(channel, payload.message_id, payload.user_id)
-        except:
-            pass
-        print('here5')
+
+        await method(channel, payload.message_id, payload.user_id)
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
@@ -135,7 +126,7 @@ class Starboard(commands.Cog):
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload):
         await self.reaction_action('unstar', payload)
-    
+
     @commands.Cog.listener()
     async def on_raw_message_delete(self, payload):
         if payload.message_id in self._about_to_be_deleted:
@@ -174,14 +165,13 @@ class Starboard(commands.Cog):
 
         star = (await StarEntries.filter(message_id = str(payload.message_id)))[0]
         await star.delete()
-        
+
         msg = await self.get_message(self.starboard, int(star.bot_message_id))
         if msg is not None:
             await msg.delete()
-    
+
     async def star_message(self, channel, message_id, starrer_id):
         async with self._lock:
-            print('here star start')
             await self._star_message(channel, message_id, starrer_id)
 
     async def _star_message(self, channel, message_id, starrer_id):
@@ -196,7 +186,6 @@ class Starboard(commands.Cog):
                 raise StarError('Не удалось найти первоначальный канал.')
 
             return await self.star_message(ch, record.message_id, starrer_id)
-        print('star1')
         msg = await self.get_message(channel, message_id)
 
         if msg is None:
@@ -208,42 +197,34 @@ class Starboard(commands.Cog):
         empty_message = len(msg.content) == 0 and len(msg.attachments) == 0
         if empty_message or msg.type not in (discord.MessageType.default, discord.MessageType.reply):
             raise StarError('На это сообщение нельзя поставить звезду.')
-        print('star2')
 
-        defaults = {
+        ids = {
             'message_id': str(message_id),
             'channel_id': str(channel.id),
             'author_id': str(msg.author.id)
         }
         try:
-            print('MAYBE HEEEERE?')
-            entry = await StarEntries.create(**defaults)
-            print('no error')
+            entry = await StarEntries.create(**ids)
         except IntegrityError:
-            print('error occurred, get')
-            entry = await StarEntries.get(message_id = defaults['message_id'])
+            entry = await StarEntries.get(message_id = ids['message_id'])
         await entry.starrers.add((await Members.get_or_create(discord_id = str(starrer_id)))[0])
-        
-        count = len(await entry.starrers.all())
-        print(count)
+
+        count = await entry.starrers.all().count()
         if count < 2:
             return
 
         # at this point, we either edit the message or we create a message
         # with our star info
         content, embed = self.get_emoji_message(msg, count)
-        print('star3')
 
         # get the message ID to edit:
         bot_message_id = entry.bot_message_id
 
         if bot_message_id is None:
-            print('star4')
             new_msg = await self.starboard.send(content, embed=embed)
             entry.bot_message_id = new_msg.id
             await entry.save()
         else:
-            print('star5')
             new_msg = await self.get_message(self.starboard, bot_message_id)
             if new_msg is None:
                 # deleted? might as well purge the data
@@ -252,14 +233,12 @@ class Starboard(commands.Cog):
                     .delete()
                 )
             else:
-                print('star6')
                 await new_msg.edit(content=content, embed=embed)
 
     async def unstar_message(self, channel, message_id, starrer_id):
         async with self._lock:
-            print('here unstar start')
             await self._unstar_message(channel, message_id, starrer_id)
-    
+
     async def _unstar_message(self, channel, message_id, starrer_id):
         if channel.id == self.starboard.id:
             record = await (StarEntries
@@ -274,7 +253,6 @@ class Starboard(commands.Cog):
                 raise StarError('Не удалось найти первоначальный канал.')
 
             return await self.unstar_message(ch, record.message_id, starrer_id)
-        print('unstar1')
         record = await StarEntries.get_or_none(message_id = message_id)
         if record is None:
             raise StarError('\N{NO ENTRY SIGN} Этого сообщения ещё нет на доске.')
@@ -296,12 +274,10 @@ class Starboard(commands.Cog):
 
         if bot_message_id is None:
             return
-        print('unstar2')
 
         bot_message = await self.get_message(self.starboard, bot_message_id)
         if bot_message is None:
             return
-        print('unstar3')
 
         if count < 2:
             self._about_to_be_deleted.add(bot_message_id)
@@ -309,14 +285,12 @@ class Starboard(commands.Cog):
                 # update the bot_message_id to be NULL in the table since we're deleting it
                 record.bot_message_id = None
                 await record.save()
-            print('unstar4')
 
             await bot_message.delete()
         else:
             msg = await self.get_message(channel, message_id)
             if msg is None:
                 raise StarError('\N{BLACK QUESTION MARK ORNAMENT} Это сообщение не найдено.')
-            print('unstar5')
 
             content, embed = self.get_emoji_message(msg, count)
             await bot_message.edit(content=content, embed=embed)

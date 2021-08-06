@@ -1,6 +1,6 @@
 git+https://github.com/Rapptz/discord.py
 git+https://github.com/Rapptz/discord-ext-menus
-git+https://github.com/EQUENOS/dislash.py
+dislash.py==1.2.12
 pymorphy2==0.9.1
 TenGiphPy
 Pillow
