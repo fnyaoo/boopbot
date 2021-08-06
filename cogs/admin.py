@@ -1,18 +1,21 @@
-from discord.ext.commands.core import command
-from utils.funcs import inflect_by_amount
-import discord
-from discord.ext import commands
+import random
 from typing import Dict, List, Tuple
 
+import discord
+from discord.ext import commands
+from discord.ext.commands.core import command
+
+from utils.funcs import inflect_by_amount
 from checks import is_admin
 
 
 class AdminFlags(commands.FlagConverter, prefix = '/', delimiter = ' '):
-    target: Tuple[discord.Member, ...] = commands.flag(aliases = ['member', 'members', 'targets', 'from', 'от'], default = [])
-    limit: int                         = commands.flag(aliases = ['count', 'amount', 'кол-во', 'количество'], default = 50)
-    contains: str                      = commands.flag(aliases = ['с', 'вместе', 'есть'], default = None)
-    after: discord.Message             = commands.flag(default = None)
-    before: discord.Message            = commands.flag(default = None)
+    target: Tuple[discord.Member, ...] = commands.flag(aliases = ['t', 'member', 'members', 'targets', 'from', 'от'], default = [])
+    limit: int                         = commands.flag(aliases = ['l', 'amount', 'кол-во', 'лимит'], default = 50)
+    contains: str                      = commands.flag(aliases = ['c', 'содержит'], default = None)
+    before: discord.Message            = commands.flag(aliases = ['b', 'до'], default = None)
+    after: discord.Message             = commands.flag(aliases = ['a', 'после'], default = None)
+    expression: str                    = commands.flag(aliases = ['e', 'operator', 'оператор'], default = 'and')
 
 class AdminCommands(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -33,7 +36,18 @@ class AdminCommands(commands.Cog):
                 condition.append(m.author in flags.target)
             if flags.contains is not None:
                 condition.append(flags.contains.casefold() in m.content.casefold())
-            return all(condition)
+            
+            exp = flags.expression
+            if exp in ('and', 'и', 'all', 'все'):
+                method = all
+            elif exp in ('or', 'или', 'any', 'любое'):
+                method = any
+            elif exp in ('xor', 'отрицательное или'):
+                def method(c):
+                    return (not all(c)) or any(c)
+            else:
+                raise commands.BadArgument(f'Неизвестный оператор {exp}')
+            return method(condition)
 
         kwargs = {
             'limit': flags.limit+1,
