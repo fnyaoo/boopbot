@@ -18,7 +18,7 @@ class Starboard(commands.Cog):
         self._message_cache = {}
         self._about_to_be_deleted = set()
         self._lock = asyncio.Lock(loop=self.bot.loop)
-    
+
     @commands.Cog.listener()
     async def on_ready(self):
         self.starboard: discord.TextChannel = self.bot.get_channel(865617516269142026)
