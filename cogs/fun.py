@@ -4,7 +4,7 @@ import requests
 
 import discord
 from discord.ext import commands
-from dislash import slash_commands
+from dislash import *
 
 from TenGiphPy import Tenor
 tenor = Tenor('KOVXP2DQ9PU7')
@@ -17,46 +17,40 @@ class Fun(commands.Cog):
     
     @slash_commands.command(
         name = 'hug',
-        description = 'Обнимает человка',
+        description = 'Обнимает человека',
         guild_ids = [824997091075555419],
         options = [
-            slash_commands.Option(
+            Option(
                 name = 'target',
                 description = 'Тот, кого нужно обнять',
-                type = slash_commands.Type.USER,
+                type = Type.USER,
                 required = True
             )
         ]
     )
-    async def hug(self, inter):
-        target = inter.get('target')
-        if not target:
-            return await inter.reply('Нельзя никого не обнимать!')
+    async def hug(self, inter, target):
         await inter.reply(
             f'{inter.author.mention} обнял(а) {target if target is str else target.mention}', 
-            embed = discord.Embed(color = 0xf0f0f0).set_image(url = tenor.random('anime hug'))
+            embed = discord.Embed(color = 0x2f3136).set_image(url = await tenor.arandom('anime hug'))
         )
 
     @slash_commands.command(
         name = 'kiss',
-        description = 'Целует человка',
+        description = 'Целует человека',
         guild_ids = [824997091075555419],
         options = [
-            slash_commands.Option(
+            Option(
                 name = 'target',
                 description = 'Тот, кого нужно поцеловать',
-                type = slash_commands.Type.USER,
+                type = Type.USER,
                 required = True
             )
         ]
     )
-    async def kiss(self, inter):
-        target = inter.get('target')
-        if not target:
-            return await inter.reply('Нельзя никого не целовать!')
+    async def kiss(self, inter, target):
         await inter.reply(
             f'{inter.author.mention} поцеловал(а) {target if target is str else target.mention}', 
-            embed = discord.Embed(color = 0xf0f0f0).set_image(url = tenor.random('anime kiss'))
+            embed = discord.Embed(color = 0x2f3136).set_image(url = await tenor.arandom('anime kiss'))
         )
     
     @slash_commands.command(
@@ -64,21 +58,18 @@ class Fun(commands.Cog):
         description = 'Дает пять человеку',
         guild_ids = [824997091075555419],
         options = [
-            slash_commands.Option(
+            Option(
                 name = 'target',
                 description = 'Тот, кому нужно дать пять',
-                type = slash_commands.Type.USER,
+                type = Type.USER,
                 required = True
             )
         ]
     )
-    async def highfive(self, inter):
-        target = inter.get('target')
-        if not target:
-            return await inter.reply('Нельзя дать пять воздуху!')
+    async def highfive(self, inter, target):
         await inter.reply(
             f'{inter.author.mention} дал(а) пять {target if target is str else target.mention}', 
-            embed = discord.Embed(color = 0xf0f0f0).set_image(url = tenor.random('anime high five'))
+            embed = discord.Embed(color = 0x2f3136).set_image(url = await tenor.arandom('anime high five'))
         )
 
     @slash_commands.command(

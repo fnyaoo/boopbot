@@ -28,7 +28,7 @@ class AdminCommands(commands.Cog):
             if len(flags.target) > 0:
                 condition.append(m.author in flags.target)
             if flags.contains is not None:
-                condition.append(flags.contains in m.content)
+                condition.append(flags.contains.casefold() in m.content.casefold())
             return all(condition)
 
         deleted: List[discord.Message] = await ctx.channel.purge(limit = flags.limit+1, check = is_target)

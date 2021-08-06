@@ -1,5 +1,6 @@
-from bot import BoopBot
 from os import environ
+
+from bot import BoopBot
 from utils import db
 
 
