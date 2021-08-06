@@ -1,3 +1,4 @@
+from discord.ext.commands.core import command
 from utils.funcs import inflect_by_amount
 import discord
 from discord.ext import commands
@@ -8,8 +9,10 @@ from checks import is_admin
 
 class AdminFlags(commands.FlagConverter, prefix = '/', delimiter = ' '):
     target: Tuple[discord.Member, ...] = commands.flag(aliases = ['member', 'members', 'targets', 'from', 'от'], default = [])
-    limit: int = commands.flag(aliases = ['count', 'amount', 'кол-во', 'количество'], default = 50)
-    contains: str = commands.flag(aliases = ['с', 'вместе', 'есть'], default = None)
+    limit: int                         = commands.flag(aliases = ['count', 'amount', 'кол-во', 'количество'], default = 50)
+    contains: str                      = commands.flag(aliases = ['с', 'вместе', 'есть'], default = None)
+    after: discord.Message             = commands.flag(default = None)
+    before: discord.Message            = commands.flag(default = None)
 
 class AdminCommands(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -21,6 +24,7 @@ class AdminCommands(commands.Cog):
     @commands.command(name = 'purge')
     @is_admin()
     async def _purge(self, ctx: commands.Context, *, flags: AdminFlags):
+        ch: discord.TextChannel = ctx.channel
         def is_target(m):
             if m == ctx.message:
                 return False
@@ -31,7 +35,14 @@ class AdminCommands(commands.Cog):
                 condition.append(flags.contains.casefold() in m.content.casefold())
             return all(condition)
 
-        deleted: List[discord.Message] = await ctx.channel.purge(limit = flags.limit+1, check = is_target)
+        kwargs = {
+            'limit': flags.limit+1,
+            'check': is_target,
+            'before': flags.before,
+            'after': flags.after
+        }
+
+        deleted: List[discord.Message] = await ch.purge(**kwargs)
 
         text: Dict[discord.Member, int] = {}
         for message in deleted:
