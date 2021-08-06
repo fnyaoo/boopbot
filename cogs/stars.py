@@ -8,7 +8,7 @@ from tortoise.exceptions import IntegrityError
 from utils.db import StarEntries, Members
 # just copy-pasted whole code from https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/stars.py
 # and adapted for my db
-class StarError(Exception): ...
+class StarError(commands.CheckFailure): ...
 
 class Starboard(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -210,7 +210,7 @@ class Starboard(commands.Cog):
         await entry.starrers.add((await Members.get_or_create(discord_id = str(starrer_id)))[0])
 
         count = await entry.starrers.all().count()
-        if count < 4:
+        if count < 3:
             return
 
         # at this point, we either edit the message or we create a message
@@ -279,7 +279,7 @@ class Starboard(commands.Cog):
         if bot_message is None:
             return
 
-        if count < 4:
+        if count < 3:
             self._about_to_be_deleted.add(bot_message_id)
             if count:
                 # update the bot_message_id to be NULL in the table since we're deleting it
