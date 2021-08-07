@@ -9,19 +9,19 @@ from dislash import SlashClient
 
 
 initial_extensions = (
-    # 'cogs.admin',
-    # 'cogs.fun',
-    # 'cogs.help',
-    # 'cogs.logs',
-    # 'cogs.roles',
-    # 'cogs.scoring',
+    'cogs.admin',
+    'cogs.fun',
+    'cogs.help',
+    'cogs.logs',
+    'cogs.roles',
+    'cogs.scoring',
     'cogs.stars',
-    # 'cogs.status',
-    # 'cogs.triggers',
-    # 'cogs.welcome',
+    'cogs.status',
+    'cogs.triggers',
+    'cogs.welcome',
 
-    # 'games.rockpaperscissors',
-    # 'games.tictactoe',
+    'games.rockpaperscissors',
+    'games.tictactoe',
 
     'jishaku',
     'events'

@@ -117,7 +117,10 @@ class Starboard(commands.Cog):
         if user is None or user.bot:
             return
 
-        await method(channel, payload.message_id, payload.user_id)
+        try:
+            await method(channel, payload.message_id, payload.user_id)
+        except StarError as e:
+            await user.send(e)
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
