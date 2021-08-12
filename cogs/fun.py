@@ -12,8 +12,8 @@ from TenGiphPy import Tenor
 tenor = Tenor('KOVXP2DQ9PU7')
 
 guilds = [
-    # 824997091075555419,
-    859290967475879966,
+    824997091075555419,
+    # 859290967475879966,
 ]
 
 
