@@ -5,7 +5,7 @@ from datetime import datetime
 
 import discord
 from discord.ext import commands
-from dislash import SlashClient
+from dislash import InteractionClient
 
 
 initial_extensions = (
@@ -39,7 +39,7 @@ class BoopBot(commands.Bot):
             intents = discord.Intents.all()
         )
         self._program_start = discord.utils.utcnow()
-        SlashClient(self, modify_send = False)
+        InteractionClient(self, modify_send = False)
 
         loaded = []
         for extension in initial_extensions:
@@ -59,8 +59,6 @@ class BoopBot(commands.Bot):
             await self.get_channel(827504142406385664).send(
                 embed = discord.Embed(
                     description = f'Бот запущен\nВремя запуска: {discord.utils.format_dt(self._program_start, "R")}'
-                ).set_footer(
-                    text = 'Префикс: !'
                 )
             )
     
