@@ -1,15 +1,12 @@
 import json
 import random
-import asyncio
-from discord.embeds import Embed
 import requests
 
-import akinator
-from akinator.async_aki import Akinator
 import discord
-from discord.ext import commands
 import dislash
+from discord.ext import commands
 from dislash import application_commands, Option, OptionType, OptionChoice
+from akinator.async_aki import Akinator
 
 from TenGiphPy import Tenor
 tenor = Tenor('KOVXP2DQ9PU7')
