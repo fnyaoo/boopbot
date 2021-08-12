@@ -1,8 +1,9 @@
 git+https://github.com/Rapptz/discord.py
 git+https://github.com/Rapptz/discord-ext-menus
-dislash.py==1.4.2
+dislash.py==1.4.4
 pymorphy2==0.9.1
 TenGiphPy
 Pillow
 jishaku
 tortoise-orm[asyncpg]
+akinator.py[async]
