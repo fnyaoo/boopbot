@@ -245,8 +245,8 @@ class Fun(commands.Cog):
             )
         ]
     )
-    @application_commands.is_owner()
-    # @application_commands.cooldown(1, 120, commands.BucketType.user)
+    # @application_commands.is_owner()
+    @application_commands.cooldown(1, 120, commands.BucketType.user)
     async def _akinator(self, inter: dislash.SlashInteraction, language = None):
         language = language or 'ru'
         aki = Akinator()
@@ -256,7 +256,6 @@ class Fun(commands.Cog):
 
         await view.wait()
         await aki.close()
-
 
 def setup(bot):
     bot.add_cog(Fun(bot))
