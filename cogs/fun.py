@@ -248,7 +248,8 @@ class Fun(commands.Cog):
             )
         ]
     )
-    @application_commands.cooldown(1, 120, commands.BucketType.user)
+    @application_commands.is_owner()
+    # @application_commands.cooldown(1, 120, commands.BucketType.user)
     async def _akinator(self, inter: dislash.SlashInteraction, language = None):
         language = language or 'ru'
         aki = Akinator()
