@@ -110,6 +110,41 @@ class Fun(commands.Cog):
             embed = discord.Embed(color = 0x2f3136).set_image(url = await tenor.arandom('anime high five'))
         )
 
+
+    @application_commands.slash_command(
+        name = 'bonk',
+        description = 'Дает пизды человеку',
+        guild_ids = [824997091075555419],
+        options = [
+            Option(
+                name = 'target',
+                description = 'Тот, кому нужно дать пизды',
+                type = Type.USER,
+                required = True
+            )
+        ]
+    )
+    async def _slash_bonk(self, inter, target):
+        await self.bonk(inter, target)
+
+
+    @application_commands.user_command(
+        name = 'Дать пизды',
+        guild_ids = [824997091075555419]
+    )
+    async def _user_bonk(self, inter):
+        await self.bonk(inter, inter.member)
+
+
+
+    async def bonk(self, inter, target):
+        ch = ['bonk', 'boxing', 'fight']
+        await inter.reply(
+            f'{inter.author.mention} ёбнул(а) {target.mention}',
+            embed = discord.Embed(color = 0x2f3136).set_image(url = await tenor.arandom(f'anime {random.choice(ch)}'))
+        )
+
+
     @application_commands.slash_command(
         name = 'topic',
         description = 'Рандомная тема чата',
