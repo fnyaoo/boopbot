@@ -12,8 +12,8 @@ from TenGiphPy import Tenor
 tenor = Tenor('KOVXP2DQ9PU7')
 
 guilds = [
-    824997091075555419,
-    # 859290967475879966,
+    # 824997091075555419,
+    859290967475879966,
 ]
 
 
@@ -98,6 +98,7 @@ class Fun(commands.Cog):
             )
         ]
     )
+    @application_commands.cooldown(1, 300, commands.BucketType.user)
     async def _slash_hug(self, inter, target):
         await self.hug(inter, target)
 
@@ -106,6 +107,7 @@ class Fun(commands.Cog):
         name = 'Обнять',
         guild_ids = guilds
     )
+    @application_commands.cooldown(1, 300, commands.BucketType.user)
     async def _user_hug(self, inter):
         await self.hug(inter, inter.member)
 
@@ -130,6 +132,7 @@ class Fun(commands.Cog):
             )
         ]
     )
+    @application_commands.cooldown(1, 300, commands.BucketType.user)
     async def _slash_kiss(self, inter, target):
         await self.kiss(inter, target)
 
@@ -138,6 +141,7 @@ class Fun(commands.Cog):
         name = 'Поцеловать',
         guild_ids = guilds
     )
+    @application_commands.cooldown(1, 300, commands.BucketType.user)
     async def _user_kiss(self, inter):
         await self.kiss(inter, inter.member)
 
@@ -162,6 +166,7 @@ class Fun(commands.Cog):
             )
         ]
     )
+    @application_commands.cooldown(1, 300, commands.BucketType.user)
     async def _slash_highfive(self, inter, target):
         await self.highfive(inter, target)
 
@@ -170,6 +175,7 @@ class Fun(commands.Cog):
         name = 'Дать пять',
         guild_ids = guilds
     )
+    @application_commands.cooldown(1, 300, commands.BucketType.user)
     async def _user_highfive(self, inter):
         await self.highfive(inter, inter.member)
 
@@ -194,6 +200,7 @@ class Fun(commands.Cog):
             )
         ]
     )
+    @application_commands.cooldown(1, 300, commands.BucketType.user)
     async def _slash_bonk(self, inter, target):
         await self.bonk(inter, target)
 
@@ -202,6 +209,7 @@ class Fun(commands.Cog):
         name = 'Дать пизды',
         guild_ids = guilds
     )
+    @application_commands.cooldown(1, 300, commands.BucketType.user)
     async def _user_bonk(self, inter):
         await self.bonk(inter, inter.member)
 
@@ -219,6 +227,7 @@ class Fun(commands.Cog):
         description = 'Рандомная тема чата',
         guild_ids = guilds
     )
+    @application_commands.cooldown(1, 300, commands.BucketType.channel)
     async def topic(self, inter):
         result = requests.post(url = 'https://randomall.ru/api/custom/gens/1888')
         if result.status_code == 200:
@@ -245,8 +254,8 @@ class Fun(commands.Cog):
             )
         ]
     )
-    # @application_commands.is_owner()
-    @application_commands.cooldown(1, 120, commands.BucketType.user)
+    @application_commands.is_owner()
+    # @application_commands.cooldown(1, 120, commands.BucketType.user)
     async def _akinator(self, inter: dislash.SlashInteraction, language = None):
         language = language or 'ru'
         aki = Akinator()

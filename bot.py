@@ -9,22 +9,22 @@ from dislash import InteractionClient
 
 
 initial_extensions = (
-    'cogs.admin',
+    # 'cogs.admin',
     'cogs.fun',
-    'cogs.help',
-    'cogs.logs',
-    'cogs.roles',
-    'cogs.scoring',
-    'cogs.stars',
-    'cogs.status',
-    'cogs.triggers',
-    'cogs.welcome',
+    # 'cogs.help',
+    # 'cogs.logs',
+    # 'cogs.roles',
+    # 'cogs.scoring',
+    # 'cogs.stars',
+    # 'cogs.status',
+    # 'cogs.triggers',
+    # 'cogs.welcome',
 
-    'games.rockpaperscissors',
-    'games.tictactoe',
+    # 'games.rockpaperscissors',
+    # 'games.tictactoe',
 
-    'jishaku',
-    'events'
+    # 'jishaku',
+    # 'events'
 )
 
 def _prefix_callable(bot, msg):
